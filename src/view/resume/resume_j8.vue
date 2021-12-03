@@ -9,8 +9,15 @@
     </Table>
   </div>
 </template>
+<style>
+.ivu-table-cell {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+</style>
 <script>
 import {addResumeEight, deleteResumeEight} from "@/http/plane_system/base";
+import {addTime} from './addTime'
 
 export default {
   data() {
@@ -39,6 +46,7 @@ export default {
           title: '当日启动次数',
           key: 'today_start_times',
           align: 'center',
+          width: 80,
           render: (h, params) => {
             return h('InputNumber', {
               props: {
@@ -62,14 +70,19 @@ export default {
               key: 'ground_fly',
               align: 'center',
               render: (h, params) => {
-                return h('Input', {
+                return h('TimePicker', {
                   props: {
                     value: this.resume_j8_data[params.index].groundFly,
+                    format: "HH:mm",
                     size: 'small'
                   },
                   on: {
                     input: (val) => {
                       this.resume_j8_data[params.index].groundFly = val
+                      this.resume_j8_data[params.index].totalFly = addTime(val, this.resume_j8_data[params.index].airFly, 'hhmm')
+                      if (params.index > 0) {
+                        this.resume_j8_data[params.index].totalFly = addTime(this.resume_j8_data[params.index - 1].totalFly, this.resume_j8_data[params.index].totalFly, 'hhmm')
+                      }
                     }
                   },
                 })
@@ -80,9 +93,10 @@ export default {
               key: 'ground_rated',
               align: 'center',
               render: (h, params) => {
-                return h('Input', {
+                return h('TimePicker', {
                   props: {
                     value: this.resume_j8_data[params.index].groundRated,
+                    format: "HH:mm",
                     size: 'small'
                   },
                   on: {
@@ -122,14 +136,19 @@ export default {
               key: 'air_fly',
               align: 'center',
               render: (h, params) => {
-                return h('Input', {
+                return h('TimePicker', {
                   props: {
                     value: this.resume_j8_data[params.index].airFly,
+                    format: "HH:mm",
                     size: 'small'
                   },
                   on: {
                     input: (val) => {
                       this.resume_j8_data[params.index].airFly = val
+                      this.resume_j8_data[params.index].totalFly = addTime(this.resume_j8_data[params.index].groundFly, val, 'hhmm')
+                      if (params.index > 0) {
+                        this.resume_j8_data[params.index].totalFly = addTime(this.resume_j8_data[params.index - 1].totalFly, this.resume_j8_data[params.index].totalFly, 'hhmm')
+                      }
                     }
                   },
                 })
@@ -140,9 +159,10 @@ export default {
               key: 'air_rated',
               align: 'center',
               render: (h, params) => {
-                return h('Input', {
+                return h('TimePicker', {
                   props: {
                     value: this.resume_j8_data[params.index].airRated,
+                    format: "HH:mm",
                     size: 'small'
                   },
                   on: {
@@ -349,7 +369,8 @@ export default {
       this.resume_j8_data.push({
         planeId: this.$route.query['id'],
         todayStartTimes: null,
-        totalStartTimes: null
+        totalStartTimes: null,
+        totalFly: ''
       })
     },
     saveRecord() {

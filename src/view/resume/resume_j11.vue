@@ -45,24 +45,40 @@
     </TabPane>
     <TabPane label="随机时间" name="random_time">随机时间未知</TabPane>
 
+    <Dropdown slot="extra" @on-click="formulaMode" style="margin-right: 5px;">
+      <Button type="primary" shape="circle">
+        {{ typeName }}
+        <Icon type="ios-arrow-down"></Icon>
+      </Button>
+      <DropdownMenu slot="list">
+        <DropdownItem name="type1">第一种</DropdownItem>
+        <DropdownItem name="type2">第二种</DropdownItem>
+        <DropdownItem name="type3">第三种</DropdownItem>
+        <DropdownItem name="type4">第四种</DropdownItem>
+      </DropdownMenu>
+    </Dropdown>
     <Button type="primary" style="margin-right: 5px;" shape="circle" slot="extra" @click="addRecord">添加</Button>
     <Button type="primary" shape="circle" slot="extra" @click="saveRecord">保存</Button>
   </Tabs>
 </template>
 <script>
 import {addResume, deleteResume} from "@/http/plane_system/base";
+import {addTime} from './addTime'
 
 export default {
   data() {
     return {
       type: 'engine_left',
+      adjustOld: 0,
+      adjustNew: 0,
+      typeName: '选择方式',
 
       engine_left_columns: [
         {
           title: '日期',
           key: 'engine_date',
           align: 'center',
-          width: 140,
+          width: 150,
           render: (h, params) => {
             return h('DatePicker', {
               props: {
@@ -108,17 +124,27 @@ export default {
                   key: 'engine_s_ground_flight',
                   align: 'center',
                   render: (h, params) => {
-                    return h('Input', {
-                      props: {
-                        value: this.engine_left_data[params.index].engineSGroundFlight,
-                        size: 'small'
-                      },
-                      on: {
-                        input: (val) => {
-                          this.engine_left_data[params.index].engineSGroundFlight = val
+                    return h('div', [
+                      h('Badge', {
+                        style: {
+                          float: 'right'
+                        },
+                        props: {
+                          count: 3
                         }
-                      },
-                    })
+                      }),
+                      h('Input', {
+                        props: {
+                          value: this.engine_left_data[params.index].engineSGroundFlight,
+                          size: 'small'
+                        },
+                        on: {
+                          input: (val) => {
+                            this.engine_left_data[params.index].engineSGroundFlight = val
+                          }
+                        }
+                      })
+                    ])
                   }
                 },
                 {
@@ -126,17 +152,27 @@ export default {
                   key: 'engine_sp_ground_flight',
                   align: 'center',
                   render: (h, params) => {
-                    return h('Input', {
-                      props: {
-                        value: this.engine_left_data[params.index].engineSpGroundFlight,
-                        size: 'small'
-                      },
-                      on: {
-                        input: (val) => {
-                          this.engine_left_data[params.index].engineSpGroundFlight = val
+                    return h('div', [
+                      h('Badge', {
+                        style: {
+                          float: 'right'
+                        },
+                        props: {
+                          count: 3
                         }
-                      },
-                    })
+                      }),
+                      h('Input', {
+                        props: {
+                          value: this.engine_left_data[params.index].engineSpGroundFlight,
+                          size: 'small'
+                        },
+                        on: {
+                          input: (val) => {
+                            this.engine_left_data[params.index].engineSpGroundFlight = val
+                          }
+                        }
+                      })
+                    ])
                   }
                 }
               ]
@@ -192,8 +228,17 @@ export default {
           ]
         },
         {
-          title: '发动机м+ф状态工作累计（地面м+ф状态工作按100％考虑）（h,min,s）',
+          type: 'html',
+          title: '',
           align: 'center',
+          renderHeader: (h, params) => {
+            let text = '发动机м+ф状态工作累计（地面м+ф状态工作按100％考虑）<br/>（h,min,s）';
+            return h('div', {
+              domProps: {
+                innerHTML: text
+              }
+            });
+          },
           children: [
             {
               title: '状态',
@@ -203,8 +248,9 @@ export default {
                   title: 'Б',
                   key: 'engine_s_state_work',
                   align: 'center',
+                  width: 130,
                   render: (h, params) => {
-                    return h('Input', {
+                    return h('TimePicker', {
                       props: {
                         value: this.engine_left_data[params.index].engineSStateWork,
                         size: 'small'
@@ -212,6 +258,8 @@ export default {
                       on: {
                         input: (val) => {
                           this.engine_left_data[params.index].engineSStateWork = val
+                          // 如果值的变化需要动态计算
+                          this.engine_left_data[params.index].engineSpStateWork = addTime(val, this.engine_left_data[params.index].engineYsStateWork)
                         }
                       },
                     })
@@ -221,8 +269,9 @@ export default {
                   title: 'УБ',
                   key: 'engine_ys_state_work',
                   align: 'center',
+                  width: 130,
                   render: (h, params) => {
-                    return h('Input', {
+                    return h('TimePicker', {
                       props: {
                         value: this.engine_left_data[params.index].engineYsStateWork,
                         size: 'small'
@@ -230,6 +279,8 @@ export default {
                       on: {
                         input: (val) => {
                           this.engine_left_data[params.index].engineYsStateWork = val
+                          // 如果值的变化需要动态计算
+                          this.engine_left_data[params.index].engineSpStateWork = addTime(this.engine_left_data[params.index].engineSStateWork, val)
                         }
                       },
                     })
@@ -239,6 +290,7 @@ export default {
                   title: 'Б+УБ',
                   key: 'engine_sp_state_work',
                   align: 'center',
+                  width: 130,
                   render: (h, params) => {
                     return h('Input', {
                       props: {
@@ -326,8 +378,26 @@ export default {
                       on: {
                         input: (val) => {
                           this.engine_left_data[params.index].engineSMainCycle = val
+                        },
+                        'on-focus': () => {
+                          // 聚焦时记录旧值
+                          this.adjustOld = this.engine_left_data[params.index].engineSMainCycle
+                        },
+                        'on-blur': () => {
+                          // 失焦时记录新值
+                          this.adjustNew = this.engine_left_data[params.index].engineSMainCycle
+                          // 如果没有改变则不更新
+                          if (this.adjustOld === this.adjustNew) {
+                            return
+                          }
+                          // 如果不是第一个则需要加上上面的值
+                          if (params.index > 0) {
+                            this.engine_left_data[params.index].engineSMainCycle += this.engine_left_data[params.index - 1].engineSMainCycle
+                          }
+                          // 变更值的时候需要动态计算下面的值
+                          this.adjustBelow(params.index)
                         }
-                      },
+                      }
                     })
                   }
                 },
@@ -344,6 +414,24 @@ export default {
                       on: {
                         input: (val) => {
                           this.engine_left_data[params.index].engineSpMainCycle = val
+                        },
+                        'on-focus': () => {
+                          // 聚焦时记录旧值
+                          this.adjustOld = this.engine_left_data[params.index].engineSpMainCycle
+                        },
+                        'on-blur': () => {
+                          // 失焦时记录新值
+                          this.adjustNew = this.engine_left_data[params.index].engineSpMainCycle
+                          // 如果没有改变则不更新
+                          if (this.adjustOld === this.adjustNew) {
+                            return
+                          }
+                          // 如果不是第一个则需要加上上面的值
+                          if (params.index > 0) {
+                            this.engine_left_data[params.index].engineSpMainCycle += this.engine_left_data[params.index - 1].engineSpMainCycle
+                          }
+                          // 变更值的时候需要动态计算下面的值
+                          this.adjustBelow1(params.index)
                         }
                       },
                     })
@@ -1493,7 +1581,8 @@ export default {
           planeId: this.$route.query['id'],
           engineStartTimes: null,
           engineSMainCycle: null,
-          engineSpMainCycle: null
+          engineSpMainCycle: null,
+          engineSpStateWork: ''
         })
       } else if (this.type === "engine_right") {
         this.engine_right_data.push({
@@ -1501,7 +1590,8 @@ export default {
           planeId: this.$route.query['id'],
           engineStartTimes: null,
           engineSMainCycle: null,
-          engineSpMainCycle: null
+          engineSpMainCycle: null,
+          engineSpStateWork: ''
         })
       } else if (this.type === "receiver_left") {
         this.receiver_left_data.push({
@@ -1550,6 +1640,39 @@ export default {
         this.engine_left_data = []
         this.getData()
       })
+    },
+    adjustBelow(index) {
+      let len = this.engine_left_data.length
+      ++index
+      if (len === index) {
+        return
+      }
+      for (; index < len;) {
+        this.engine_left_data[index].engineSMainCycle += (this.adjustNew - this.adjustOld)
+        ++index
+      }
+    },
+    adjustBelow1(index) {
+      let len = this.engine_left_data.length
+      ++index
+      if (len === index) {
+        return
+      }
+      for (; index < len;) {
+        this.engine_left_data[index].engineSpMainCycle += (this.adjustNew - this.adjustOld)
+        ++index
+      }
+    },
+    formulaMode(type) {
+      if ('type1' === type) {
+        this.typeName = '第一种'
+      } else if ('type2' === type) {
+        this.typeName = '第二种'
+      } else if ('type3' === type) {
+        this.typeName = '第三种'
+      } else {
+        this.typeName = '第四种'
+      }
     }
   }
 }
