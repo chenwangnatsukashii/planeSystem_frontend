@@ -10,8 +10,16 @@
     </Table>
   </div>
 </template>
+<style>
+.ivu-table-cell {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+</style>
 <script>
 import {addResumeNine, deleteResumeNine} from "@/http/plane_system/base";
+import {isEmpty} from "./isEmpty"
+import {addTime} from "@/view/resume/addTime";
 
 export default {
   data() {
@@ -68,11 +76,13 @@ export default {
                     return h('InputNumber', {
                       props: {
                         value: this.resume_j9_data[params.index].groundAllHour,
-                        size: 'small'
+                        size: 'small',
+                        min: 0
                       },
                       on: {
                         input: (val) => {
                           this.resume_j9_data[params.index].groundAllHour = val
+                          this.addGroundAir(params.index)
                         }
                       },
                     })
@@ -86,11 +96,13 @@ export default {
                     return h('InputNumber', {
                       props: {
                         value: this.resume_j9_data[params.index].groundAllMinute,
-                        size: 'small'
+                        size: 'small',
+                        min: 0
                       },
                       on: {
                         input: (val) => {
                           this.resume_j9_data[params.index].groundAllMinute = val
+                          this.addGroundAir(params.index)
                         }
                       },
                     })
@@ -110,7 +122,8 @@ export default {
                     return h('InputNumber', {
                       props: {
                         value: this.resume_j9_data[params.index].groundBigHour,
-                        size: 'small'
+                        size: 'small',
+                        min: 0
                       },
                       on: {
                         input: (val) => {
@@ -128,7 +141,8 @@ export default {
                     return h('InputNumber', {
                       props: {
                         value: this.resume_j9_data[params.index].groundBigMinute,
-                        size: 'small'
+                        size: 'small',
+                        min: 0
                       },
                       on: {
                         input: (val) => {
@@ -153,7 +167,8 @@ export default {
                     return h('InputNumber', {
                       props: {
                         value: this.resume_j9_data[params.index].groundAddHour,
-                        size: 'small'
+                        size: 'small',
+                        min: 0
                       },
                       on: {
                         input: (val) => {
@@ -171,7 +186,8 @@ export default {
                     return h('InputNumber', {
                       props: {
                         value: this.resume_j9_data[params.index].groundAddMinute,
-                        size: 'small'
+                        size: 'small',
+                        min: 0
                       },
                       on: {
                         input: (val) => {
@@ -201,11 +217,13 @@ export default {
                     return h('InputNumber', {
                       props: {
                         value: this.resume_j9_data[params.index].airAllHour,
-                        size: 'small'
+                        size: 'small',
+                        min: 0
                       },
                       on: {
                         input: (val) => {
                           this.resume_j9_data[params.index].airAllHour = val
+                          this.addGroundAir(params.index)
                         }
                       },
                     })
@@ -219,11 +237,13 @@ export default {
                     return h('InputNumber', {
                       props: {
                         value: this.resume_j9_data[params.index].airAllMinute,
-                        size: 'small'
+                        size: 'small',
+                        min: 0
                       },
                       on: {
                         input: (val) => {
                           this.resume_j9_data[params.index].airAllMinute = val
+                          this.addGroundAir(params.index)
                         }
                       },
                     })
@@ -243,7 +263,8 @@ export default {
                     return h('InputNumber', {
                       props: {
                         value: this.resume_j9_data[params.index].airBigHour,
-                        size: 'small'
+                        size: 'small',
+                        min: 0
                       },
                       on: {
                         input: (val) => {
@@ -261,7 +282,8 @@ export default {
                     return h('InputNumber', {
                       props: {
                         value: this.resume_j9_data[params.index].airBigMinute,
-                        size: 'small'
+                        size: 'small',
+                        min: 0
                       },
                       on: {
                         input: (val) => {
@@ -285,7 +307,8 @@ export default {
                     return h('InputNumber', {
                       props: {
                         value: this.resume_j9_data[params.index].airAddHour,
-                        size: 'small'
+                        size: 'small',
+                        min: 0
                       },
                       on: {
                         input: (val) => {
@@ -303,7 +326,8 @@ export default {
                     return h('InputNumber', {
                       props: {
                         value: this.resume_j9_data[params.index].airAddMinute,
-                        size: 'small'
+                        size: 'small',
+                        min: 0
                       },
                       on: {
                         input: (val) => {
@@ -329,7 +353,8 @@ export default {
                 return h('InputNumber', {
                   props: {
                     value: this.resume_j9_data[params.index].totalTimeHour,
-                    size: 'small'
+                    size: 'small',
+                    min: 0
                   },
                   on: {
                     input: (val) => {
@@ -347,7 +372,8 @@ export default {
                 return h('InputNumber', {
                   props: {
                     value: this.resume_j9_data[params.index].totalTimeMinute,
-                    size: 'small'
+                    size: 'small',
+                    min: 0
                   },
                   on: {
                     input: (val) => {
@@ -367,7 +393,8 @@ export default {
             return h('InputNumber', {
               props: {
                 value: this.resume_j9_data[params.index].startTime,
-                size: 'small'
+                size: 'small',
+                min: 0
               },
               on: {
                 input: (val) => {
@@ -440,6 +467,20 @@ export default {
     },
     selectionChange(selection) {
       console.log(selection.length)
+    },
+    addGroundAir(index) {
+      let groundHour = isEmpty(this.resume_j9_data[index].groundAllHour) ? 0 : this.resume_j9_data[index].groundAllHour
+      let groundMinute = isEmpty(this.resume_j9_data[index].groundAllMinute) ? 0 : this.resume_j9_data[index].groundAllMinute
+      let airHour = isEmpty(this.resume_j9_data[index].airAllHour) ? 0 : this.resume_j9_data[index].airAllHour
+      let airMinute = isEmpty(this.resume_j9_data[index].airAllMinute) ? 0 : this.resume_j9_data[index].airAllMinute
+      groundHour = groundHour > 60 ? 60 : groundHour
+
+      let totalTime = Math.floor((groundHour * 60 + groundMinute) / 5) + airHour * 60 + airMinute
+      this.resume_j9_data[index].totalTimeHour = Math.floor(totalTime / 60)
+      this.resume_j9_data[index].totalTimeMinute = totalTime % 60
+      if (index > 0) {
+        this.resume_j9_data[index].totalTimeHour += this.resume_j9_data[index-1].totalTimeHour
+      }
     }
   }
 }

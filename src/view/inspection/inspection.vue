@@ -1,11 +1,9 @@
-
-
 <template>
   <Table stripe :columns="columns1" :data="data1"></Table>
 </template>
 <script>
 export default {
-  data () {
+  data() {
     return {
       columns1: [
         {

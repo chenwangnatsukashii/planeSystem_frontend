@@ -46,7 +46,6 @@ export default {
           title: '当日启动次数',
           key: 'today_start_times',
           align: 'center',
-          width: 80,
           render: (h, params) => {
             return h('InputNumber', {
               props: {
@@ -56,6 +55,10 @@ export default {
               on: {
                 input: (val) => {
                   this.resume_j8_data[params.index].todayStartTimes = val
+                  this.resume_j8_data[params.index].totalStartTimes = val
+                  if (params.index > 0) {
+                    this.resume_j8_data[params.index].totalStartTimes = this.resume_j8_data[params.index - 1].totalStartTimes + this.resume_j8_data[params.index].totalStartTimes
+                  }
                 }
               },
             })
@@ -102,6 +105,10 @@ export default {
                   on: {
                     input: (val) => {
                       this.resume_j8_data[params.index].groundRated = val
+                      this.resume_j8_data[params.index].totalRated = addTime(val, this.resume_j8_data[params.index].airRated, 'hhmm')
+                      if (params.index > 0) {
+                        this.resume_j8_data[params.index].totalRated = addTime(this.resume_j8_data[params.index - 1].totalRated, this.resume_j8_data[params.index].totalRated, 'hhmm')
+                      }
                     }
                   },
                 })
@@ -112,14 +119,19 @@ export default {
               key: 'ground_total',
               align: 'center',
               render: (h, params) => {
-                return h('Input', {
+                return h('TimePicker', {
                   props: {
                     value: this.resume_j8_data[params.index].groundTotal,
+                    format: "HH:mm",
                     size: 'small'
                   },
                   on: {
                     input: (val) => {
                       this.resume_j8_data[params.index].groundTotal = val
+                      this.resume_j8_data[params.index].totalTotal = addTime(val, this.resume_j8_data[params.index].airTotal, 'hhmm')
+                      if (params.index > 0) {
+                        this.resume_j8_data[params.index].totalTotal = addTime(this.resume_j8_data[params.index - 1].totalTotal, this.resume_j8_data[params.index].totalTotal, 'hhmm')
+                      }
                     }
                   },
                 })
@@ -168,6 +180,10 @@ export default {
                   on: {
                     input: (val) => {
                       this.resume_j8_data[params.index].airRated = val
+                      this.resume_j8_data[params.index].totalRated = addTime(this.resume_j8_data[params.index].groundRated, val, 'hhmm')
+                      if (params.index > 0) {
+                        this.resume_j8_data[params.index].totalRated = addTime(this.resume_j8_data[params.index - 1].totalRated, this.resume_j8_data[params.index].totalRated, 'hhmm')
+                      }
                     }
                   },
                 })
@@ -178,14 +194,19 @@ export default {
               key: 'air_total',
               align: 'center',
               render: (h, params) => {
-                return h('Input', {
+                return h('TimePicker', {
                   props: {
                     value: this.resume_j8_data[params.index].airTotal,
+                    format: "HH:mm",
                     size: 'small'
                   },
                   on: {
                     input: (val) => {
                       this.resume_j8_data[params.index].airTotal = val
+                      this.resume_j8_data[params.index].totalTotal = addTime(this.resume_j8_data[params.index].groundTotal, val, 'hhmm')
+                      if (params.index > 0) {
+                        this.resume_j8_data[params.index].totalTotal = addTime(this.resume_j8_data[params.index - 1].totalTotal, this.resume_j8_data[params.index].totalTotal, 'hhmm')
+                      }
                     }
                   },
                 })
@@ -370,7 +391,9 @@ export default {
         planeId: this.$route.query['id'],
         todayStartTimes: null,
         totalStartTimes: null,
-        totalFly: ''
+        totalFly: '',
+        totalRated: '',
+        totalTotal: ''
       })
     },
     saveRecord() {
