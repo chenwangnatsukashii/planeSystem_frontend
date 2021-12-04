@@ -2,8 +2,8 @@
   <div>
     <Button type="primary" style="margin-right: 5px;" shape="circle" slot="extra" @click="addRecord">添加</Button>
     <Button type="primary" style="" shape="circle" slot="extra" @click="saveRecord">保存</Button>
-    <Table @on-selection-change="selectionChange" stripe :columns="resume_j9_columns" :data="resume_j9_data" border
-           height="1000">
+    <Table @on-selection-change="selectionChange" show-summary :summary-method="handleSummary" stripe
+           :columns="resume_j9_columns" :data="resume_j9_data" border>
       <template slot-scope="{ row, index }" slot="operation">
         <Button type="error" size="small" @click="deleteRecord(row.id)">删除</Button>
       </template>
@@ -19,16 +19,17 @@
 <script>
 import {addResumeNine, deleteResumeNine} from "@/http/plane_system/base";
 import {isEmpty} from "./isEmpty"
-import {addTime} from "@/view/resume/addTime";
 
 export default {
   data() {
     return {
+      selectionC: null,
       resume_j9_columns: [
         {
           type: 'selection',
           width: 60,
-          align: 'center'
+          align: 'center',
+          key: 'selection'
         },
         {
           title: '日期',
@@ -407,7 +408,8 @@ export default {
         {
           title: '操作',
           slot: 'operation',
-          align: 'center'
+          align: 'center',
+          key: 'operation'
         }
       ],
       resume_j9_data: []
@@ -465,8 +467,63 @@ export default {
         this.getData()
       })
     },
+    addSelection() {
+      let selection = this.selectionC
+
+      let groundAllHour = 0
+      let groundAllMinute = 0
+      let groundBigHour = 0
+      let groundBigMinute = 0
+      let groundAddHour = 0
+      let groundAddMinute = 0
+      let airAllHour = 0
+      let airAllMinute = 0
+      let airBigHour = 0
+      let airBigMinute = 0
+      let airAddHour = 0
+      let airAddMinute = 0
+      let startTime = 0
+
+      if (!isEmpty(selection) && selection.length > 0) {
+        for (let i = 0; i < selection.length; i++) {
+          groundAllHour += selection[i].groundAllHour
+          groundAllMinute += selection[i].groundAllMinute
+          groundBigHour += selection[i].groundBigHour
+          groundBigMinute += selection[i].groundBigMinute
+          groundAddHour += selection[i].groundAddHour
+          groundAddMinute += selection[i].groundAddMinute
+          airAllHour += selection[i].airAllHour
+          airAllMinute += selection[i].airAllMinute
+          airBigHour += selection[i].airBigHour
+          airBigMinute += selection[i].airBigMinute
+          airAddHour += selection[i].airAddHour
+          airAddMinute += selection[i].airAddMinute
+          startTime += selection[i].startTime
+        }
+      }
+      return {
+        selection: {key: 'selection', value: ''},
+        nine_date: {key: 'nine_date', value: '月结'},
+        operation: {key: 'operation', value: ''},
+        ground_all_hour: {key: 'groundAllHour', value: groundAllHour},
+        ground_all_minute: {key: 'groundAllMinute', value: groundAllMinute},
+        ground_big_hour: {key: 'groundBigHour', value: groundBigHour},
+        ground_big_minute: {key: 'groundBigMinute', value: groundBigMinute},
+        ground_add_hour: {key: 'groundAddHour', value: groundAddHour},
+        ground_add_minute: {key: 'groundAddMinute', value: groundAddMinute},
+        air_all_hour: {key: 'airAllHour', value: airAllHour},
+        air_all_minute: {key: 'airAllMinute', value: airAllMinute},
+        air_big_hour: {key: 'airBigHour', value: airBigHour},
+        air_big_minute: {key: 'airBigMinute', value: airBigMinute},
+        air_add_hour: {key: 'airAddHour', value: airAddHour},
+        air_add_minute: {key: 'airAddMinute', value: airAddMinute},
+        total_time_hour: {key: 'totalTimeHour', value: isEmpty(selection) || selection.length === 0 ? 0 : selection[selection.length - 1].totalTimeHour},
+        total_time_minute: {key: 'totalTimeMinute', value: isEmpty(selection) || selection.length === 0 ? 0 : selection[selection.length - 1].totalTimeMinute},
+        start_time: {key: 'startTime', value: startTime}
+      }
+    },
     selectionChange(selection) {
-      console.log(selection.length)
+      this.selectionC = selection
     },
     addGroundAir(index) {
       let groundHour = isEmpty(this.resume_j9_data[index].groundAllHour) ? 0 : this.resume_j9_data[index].groundAllHour
@@ -479,8 +536,13 @@ export default {
       this.resume_j9_data[index].totalTimeHour = Math.floor(totalTime / 60)
       this.resume_j9_data[index].totalTimeMinute = totalTime % 60
       if (index > 0) {
-        this.resume_j9_data[index].totalTimeHour += this.resume_j9_data[index-1].totalTimeHour
+        let oldNew = this.resume_j9_data[index - 1].totalTimeHour * 60 + this.resume_j9_data[index - 1].totalTimeMinute + totalTime
+        this.resume_j9_data[index].totalTimeHour = Math.floor(oldNew / 60)
+        this.resume_j9_data[index].totalTimeMinute = oldNew % 60
       }
+    },
+    handleSummary({columns, data}) {
+      return this.addSelection();
     }
   }
 }
