@@ -62,11 +62,11 @@
   </Tabs>
 </template>
 <script>
-import {addResume, deleteResume} from "@/http/plane_system/base";
+import {addResume, deleteResume, addResumeEngine} from '@/http/plane_system/base'
 import {addTime} from './addTime'
 
 export default {
-  data() {
+  data () {
     return {
       type: 'engine_left',
       adjustOld: 0,
@@ -89,7 +89,7 @@ export default {
                 input: (val) => {
                   this.engine_left_data[params.index].engineDate = val
                 }
-              },
+              }
             })
           }
         },
@@ -107,7 +107,7 @@ export default {
                 input: (val) => {
                   this.engine_left_data[params.index].engineStartTimes = val
                 }
-              },
+              }
             })
           }
         },
@@ -201,7 +201,7 @@ export default {
                         input: (val) => {
                           this.engine_left_data[params.index].engineSFlight = val
                         }
-                      },
+                      }
                     })
                   }
                 },
@@ -219,7 +219,7 @@ export default {
                         input: (val) => {
                           this.engine_left_data[params.index].engineSpFlight = val
                         }
-                      },
+                      }
                     })
                   }
                 }
@@ -232,12 +232,12 @@ export default {
           title: '',
           align: 'center',
           renderHeader: (h, params) => {
-            let text = '发动机м+ф状态工作累计（地面м+ф状态工作按100％考虑）<br/>（h,min,s）';
+            let text = '发动机м+ф状态工作累计（地面м+ф状态工作按100％考虑）<br/>（h,min,s）'
             return h('div', {
               domProps: {
                 innerHTML: text
               }
-            });
+            })
           },
           children: [
             {
@@ -261,7 +261,7 @@ export default {
                           // 如果值的变化需要动态计算
                           this.engine_left_data[params.index].engineSpStateWork = addTime(val, this.engine_left_data[params.index].engineYsStateWork)
                         }
-                      },
+                      }
                     })
                   }
                 },
@@ -282,7 +282,7 @@ export default {
                           // 如果值的变化需要动态计算
                           this.engine_left_data[params.index].engineSpStateWork = addTime(this.engine_left_data[params.index].engineSStateWork, val)
                         }
-                      },
+                      }
                     })
                   }
                 },
@@ -301,7 +301,7 @@ export default {
                         input: (val) => {
                           this.engine_left_data[params.index].engineSpStateWork = val
                         }
-                      },
+                      }
                     })
                   }
                 }
@@ -331,7 +331,7 @@ export default {
                         input: (val) => {
                           this.engine_left_data[params.index].engineSAllStateWork = val
                         }
-                      },
+                      }
                     })
                   }
                 },
@@ -349,7 +349,7 @@ export default {
                         input: (val) => {
                           this.engine_left_data[params.index].engineSpAllStateWork = val
                         }
-                      },
+                      }
                     })
                   }
                 }
@@ -433,7 +433,7 @@ export default {
                           // 变更值的时候需要动态计算下面的值
                           this.adjustBelow1(params.index)
                         }
-                      },
+                      }
                     })
                   }
                 }
@@ -468,7 +468,7 @@ export default {
                 input: (val) => {
                   this.engine_right_data[params.index].engineDate = val
                 }
-              },
+              }
             })
           }
         },
@@ -486,7 +486,7 @@ export default {
                 input: (val) => {
                   this.engine_right_data[params.index].engineStartTimes = val
                 }
-              },
+              }
             })
           }
         },
@@ -512,7 +512,7 @@ export default {
                         input: (val) => {
                           this.engine_right_data[params.index].engineSGroundFlight = val
                         }
-                      },
+                      }
                     })
                   }
                 },
@@ -530,7 +530,7 @@ export default {
                         input: (val) => {
                           this.engine_right_data[params.index].engineSpGroundFlight = val
                         }
-                      },
+                      }
                     })
                   }
                 }
@@ -560,7 +560,7 @@ export default {
                         input: (val) => {
                           this.engine_right_data[params.index].engineSFlight = val
                         }
-                      },
+                      }
                     })
                   }
                 },
@@ -578,7 +578,7 @@ export default {
                         input: (val) => {
                           this.engine_right_data[params.index].engineSpFlight = val
                         }
-                      },
+                      }
                     })
                   }
                 }
@@ -608,7 +608,7 @@ export default {
                         input: (val) => {
                           this.engine_right_data[params.index].engineSStateWork = val
                         }
-                      },
+                      }
                     })
                   }
                 },
@@ -626,7 +626,7 @@ export default {
                         input: (val) => {
                           this.engine_right_data[params.index].engineYsStateWork = val
                         }
-                      },
+                      }
                     })
                   }
                 },
@@ -644,7 +644,7 @@ export default {
                         input: (val) => {
                           this.engine_right_data[params.index].engineSpStateWork = val
                         }
-                      },
+                      }
                     })
                   }
                 }
@@ -674,7 +674,7 @@ export default {
                         input: (val) => {
                           this.engine_right_data[params.index].engineSAllStateWork = val
                         }
-                      },
+                      }
                     })
                   }
                 },
@@ -692,7 +692,7 @@ export default {
                         input: (val) => {
                           this.engine_right_data[params.index].engineSpAllStateWork = val
                         }
-                      },
+                      }
                     })
                   }
                 }
@@ -722,7 +722,7 @@ export default {
                         input: (val) => {
                           this.engine_right_data[params.index].engineSMainCycle = val
                         }
-                      },
+                      }
                     })
                   }
                 },
@@ -740,7 +740,7 @@ export default {
                         input: (val) => {
                           this.engine_right_data[params.index].engineSpMainCycle = val
                         }
-                      },
+                      }
                     })
                   }
                 }
@@ -776,7 +776,7 @@ export default {
                 input: (val) => {
                   this.receiver_left_data[params.index].receiverDate = val
                 }
-              },
+              }
             })
           }
         },
@@ -794,7 +794,7 @@ export default {
                 input: (val) => {
                   this.receiver_left_data[params.index].receiverStartTimes = val
                 }
-              },
+              }
             })
           }
         },
@@ -820,7 +820,7 @@ export default {
                         input: (val) => {
                           this.receiver_left_data[params.index].receiverSGroundFlight = val
                         }
-                      },
+                      }
                     })
                   }
                 },
@@ -838,7 +838,7 @@ export default {
                         input: (val) => {
                           this.receiver_left_data[params.index].receiverSpGroundFlight = val
                         }
-                      },
+                      }
                     })
                   }
                 }
@@ -868,7 +868,7 @@ export default {
                         input: (val) => {
                           this.receiver_left_data[params.index].receiverSFlight = val
                         }
-                      },
+                      }
                     })
                   }
                 },
@@ -886,7 +886,7 @@ export default {
                         input: (val) => {
                           this.receiver_left_data[params.index].receiverSpFlight = val
                         }
-                      },
+                      }
                     })
                   }
                 }
@@ -916,7 +916,7 @@ export default {
                         input: (val) => {
                           this.receiver_left_data[params.index].receiverSStateWork = val
                         }
-                      },
+                      }
                     })
                   }
                 },
@@ -934,7 +934,7 @@ export default {
                         input: (val) => {
                           this.receiver_left_data[params.index].receiverYsStateWork = val
                         }
-                      },
+                      }
                     })
                   }
                 },
@@ -952,7 +952,7 @@ export default {
                         input: (val) => {
                           this.receiver_left_data[params.index].receiverSpStateWork = val
                         }
-                      },
+                      }
                     })
                   }
                 }
@@ -982,7 +982,7 @@ export default {
                         input: (val) => {
                           this.receiver_left_data[params.index].receiverSAllStateWork = val
                         }
-                      },
+                      }
                     })
                   }
                 },
@@ -1000,7 +1000,7 @@ export default {
                         input: (val) => {
                           this.receiver_left_data[params.index].receiverSpAllStateWork = val
                         }
-                      },
+                      }
                     })
                   }
                 }
@@ -1031,7 +1031,7 @@ export default {
                 input: (val) => {
                   this.receiver_right_data[params.index].receiverDate = val
                 }
-              },
+              }
             })
           }
         },
@@ -1049,7 +1049,7 @@ export default {
                 input: (val) => {
                   this.receiver_right_data[params.index].receiverStartTimes = val
                 }
-              },
+              }
             })
           }
         },
@@ -1075,7 +1075,7 @@ export default {
                         input: (val) => {
                           this.receiver_right_data[params.index].receiverSGroundFlight = val
                         }
-                      },
+                      }
                     })
                   }
                 },
@@ -1093,7 +1093,7 @@ export default {
                         input: (val) => {
                           this.receiver_right_data[params.index].receiverSpGroundFlight = val
                         }
-                      },
+                      }
                     })
                   }
                 }
@@ -1123,7 +1123,7 @@ export default {
                         input: (val) => {
                           this.receiver_right_data[params.index].receiverSFlight = val
                         }
-                      },
+                      }
                     })
                   }
                 },
@@ -1141,7 +1141,7 @@ export default {
                         input: (val) => {
                           this.receiver_right_data[params.index].receiverSpFlight = val
                         }
-                      },
+                      }
                     })
                   }
                 }
@@ -1171,7 +1171,7 @@ export default {
                         input: (val) => {
                           this.receiver_right_data[params.index].receiverSStateWork = val
                         }
-                      },
+                      }
                     })
                   }
                 },
@@ -1189,7 +1189,7 @@ export default {
                         input: (val) => {
                           this.receiver_right_data[params.index].receiverYsStateWork = val
                         }
-                      },
+                      }
                     })
                   }
                 },
@@ -1207,7 +1207,7 @@ export default {
                         input: (val) => {
                           this.receiver_right_data[params.index].receiverSpStateWork = val
                         }
-                      },
+                      }
                     })
                   }
                 }
@@ -1237,7 +1237,7 @@ export default {
                         input: (val) => {
                           this.receiver_right_data[params.index].receiverSAllStateWork = val
                         }
-                      },
+                      }
                     })
                   }
                 },
@@ -1255,7 +1255,7 @@ export default {
                         input: (val) => {
                           this.receiver_right_data[params.index].receiverSpAllStateWork = val
                         }
-                      },
+                      }
                     })
                   }
                 }
@@ -1287,7 +1287,7 @@ export default {
                 input: (val) => {
                   this.engine_s_left_data[params.index].SEngineDate = val
                 }
-              },
+              }
             })
           }
         },
@@ -1305,7 +1305,7 @@ export default {
                 input: (val) => {
                   this.engine_s_left_data[params.index].sEngineStartTimes = val
                 }
-              },
+              }
             })
           }
         },
@@ -1327,7 +1327,7 @@ export default {
                     input: (val) => {
                       this.engine_s_left_data[params.index].sEngineLastRepair = val
                     }
-                  },
+                  }
                 })
               }
             },
@@ -1345,7 +1345,7 @@ export default {
                     input: (val) => {
                       this.engine_s_left_data[params.index].sEngineLastOilSealRepair = val
                     }
-                  },
+                  }
                 })
               }
             }
@@ -1370,7 +1370,7 @@ export default {
                     input: (val) => {
                       this.engine_s_left_data[params.index].sEngineAllStart = val
                     }
-                  },
+                  }
                 })
               }
             },
@@ -1388,7 +1388,7 @@ export default {
                     input: (val) => {
                       this.engine_s_left_data[params.index].sEngineAllOilSeal = val
                     }
-                  },
+                  }
                 })
               }
             }
@@ -1417,7 +1417,7 @@ export default {
                 input: (val) => {
                   this.engine_s_right_data[params.index].SEngineDate = val
                 }
-              },
+              }
             })
           }
         },
@@ -1435,7 +1435,7 @@ export default {
                 input: (val) => {
                   this.engine_s_right_data[params.index].sEngineStartTimes = val
                 }
-              },
+              }
             })
           }
         },
@@ -1457,7 +1457,7 @@ export default {
                     input: (val) => {
                       this.engine_s_right_data[params.index].sEngineLastRepair = val
                     }
-                  },
+                  }
                 })
               }
             },
@@ -1475,7 +1475,7 @@ export default {
                     input: (val) => {
                       this.engine_s_right_data[params.index].sEngineLastOilSealRepair = val
                     }
-                  },
+                  }
                 })
               }
             }
@@ -1500,7 +1500,7 @@ export default {
                     input: (val) => {
                       this.engine_s_right_data[params.index].sEngineAllStart = val
                     }
-                  },
+                  }
                 })
               }
             },
@@ -1518,7 +1518,7 @@ export default {
                     input: (val) => {
                       this.engine_s_right_data[params.index].sEngineAllOilSeal = val
                     }
-                  },
+                  }
                 })
               }
             }
@@ -1534,48 +1534,48 @@ export default {
     }
   },
 
-  created() {
+  created () {
     this.getData()
   },
 
-  mounted() {
+  mounted () {
   },
 
   methods: {
-    getData() {
+    getData () {
       this.$get(`/plane/getResumeById/${this.$route.query['id']}/${this.type}`).then(res => {
         if (res) {
-          if (this.type === "engine_left") {
+          if (this.type === 'engine_left') {
             this.engine_left_data = res.data
-          } else if (this.type === "engine_right") {
+          } else if (this.type === 'engine_right') {
             this.engine_right_data = res.data
-          } else if (this.type === "receiver_left") {
+          } else if (this.type === 'receiver_left') {
             this.receiver_left_data = res.data
-          } else if (this.type === "receiver_right") {
+          } else if (this.type === 'receiver_right') {
             this.receiver_right_data = res.data
-          } else if (this.type === "engine_s_left") {
+          } else if (this.type === 'engine_s_left') {
             this.engine_s_left_data = res.data
-          } else if (this.type === "engine_s_right") {
+          } else if (this.type === 'engine_s_right') {
             this.engine_s_right_data = res.data
           }
         } else {
-          this.$Message.error('请求失败');
+          this.$Message.error('请求失败')
         }
       })
     },
-    changeType(type) {
+    changeType (type) {
       this.type = type
       this.getData()
     },
-    deleteRecord(id) {
-      deleteResume("/plane/deleteResume/" + id).then(res => {
+    deleteRecord (id) {
+      deleteResume('/plane/deleteResume/' + id).then(res => {
         this.$Message.success('删除成功!')
         this.engine_left_data = []
         this.getData()
       })
     },
-    addRecord() {
-      if (this.type === "engine_left") {
+    addRecord () {
+      if (this.type === 'engine_left') {
         this.engine_left_data.push({
           type: 'left',
           planeId: this.$route.query['id'],
@@ -1584,7 +1584,7 @@ export default {
           engineSpMainCycle: null,
           engineSpStateWork: ''
         })
-      } else if (this.type === "engine_right") {
+      } else if (this.type === 'engine_right') {
         this.engine_right_data.push({
           type: 'right',
           planeId: this.$route.query['id'],
@@ -1593,25 +1593,25 @@ export default {
           engineSpMainCycle: null,
           engineSpStateWork: ''
         })
-      } else if (this.type === "receiver_left") {
+      } else if (this.type === 'receiver_left') {
         this.receiver_left_data.push({
           type: 'left',
           planeId: this.$route.query['id'],
           receiverStartTimes: null
         })
-      } else if (this.type === "receiver_right") {
+      } else if (this.type === 'receiver_right') {
         this.receiver_right_data.push({
           type: 'right',
           planeId: this.$route.query['id'],
           receiverStartTimes: null
         })
-      } else if (this.type === "engine_s_left") {
+      } else if (this.type === 'engine_s_left') {
         this.engine_s_left_data.push({
           type: 'left',
           planeId: this.$route.query['id'],
           sEngineStartTimes: null
         })
-      } else if (this.type === "engine_s_right") {
+      } else if (this.type === 'engine_s_right') {
         this.engine_s_right_data.push({
           type: 'right',
           planeId: this.$route.query['id'],
@@ -1619,29 +1619,37 @@ export default {
         })
       }
     },
-    saveRecord() {
+    saveRecord () {
       let data = []
 
-      if (this.type === "engine_left") {
+      if (this.type === 'engine_left') {
         data = this.engine_left_data
-      } else if (this.type === "engine_right") {
+      } else if (this.type === 'engine_right') {
         data = this.engine_right_data
-      } else if (this.type === "receiver_left") {
+      } else if (this.type === 'receiver_left') {
         data = this.receiver_left_data
-      } else if (this.type === "receiver_right") {
+      } else if (this.type === 'receiver_right') {
         data = this.receiver_right_data
-      } else if (this.type === "engine_s_left") {
+      } else if (this.type === 'engine_s_left') {
         data = this.engine_s_left_data
-      } else if (this.type === "engine_s_right") {
+      } else if (this.type === 'engine_s_right') {
         data = this.engine_s_right_data
       }
-      addResume(data).then(res => {
-        this.$Message.success('添加成功!')
-        this.engine_left_data = []
-        this.getData()
-      })
+      if (this.type === 'engine_left' || this.type === 'engine_right') {
+        addResumeEngine(data).then(res => {
+          this.$Message.success('添加成功!')
+          this.engine_left_data = []
+          this.getData()
+        })
+      } else {
+        addResume(data).then(res => {
+          this.$Message.success('添加成功!')
+          this.engine_left_data = []
+          this.getData()
+        })
+      }
     },
-    adjustBelow(index) {
+    adjustBelow (index) {
       let len = this.engine_left_data.length
       ++index
       if (len === index) {
@@ -1652,7 +1660,7 @@ export default {
         ++index
       }
     },
-    adjustBelow1(index) {
+    adjustBelow1 (index) {
       let len = this.engine_left_data.length
       ++index
       if (len === index) {
@@ -1663,12 +1671,12 @@ export default {
         ++index
       }
     },
-    formulaMode(type) {
-      if ('type1' === type) {
+    formulaMode (type) {
+      if (type === 'type1') {
         this.typeName = '第一种'
-      } else if ('type2' === type) {
+      } else if (type === 'type2') {
         this.typeName = '第二种'
-      } else if ('type3' === type) {
+      } else if (type === 'type3') {
         this.typeName = '第三种'
       } else {
         this.typeName = '第四种'
