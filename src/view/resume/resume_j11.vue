@@ -2,42 +2,45 @@
   <Tabs v-model="type" type="card" value="resume_j11" @on-click="changeType">
     <TabPane label="飞机" name="plane">飞机未知</TabPane>
     <TabPane label="左发" name="engine_left">
-      <Table stripe :columns="engine_left_columns" :data="engine_left_data" border height="1000">
+      <Table @on-selection-change="selectionChange" show-summary :summary-method="engineSummary" stripe
+             :columns="engine_columns" :data="engine_data" border>
         <template slot-scope="{ row, index }" slot="operation">
           <Button type="error" size="small" @click="deleteRecord(row.id)">删除</Button>
         </template>
       </Table>
     </TabPane>
     <TabPane label="右发" name="engine_right">
-      <Table stripe :columns="engine_right_columns" :data="engine_right_data" border height="1000">
+      <Table @on-selection-change="selectionChange" show-summary :summary-method="engineSummary" stripe
+             :columns="engine_columns" :data="engine_data" border>
         <template slot-scope="{ row, index }" slot="operation">
           <Button type="error" size="small" @click="deleteRecord(row.id)">删除</Button>
         </template>
       </Table>
     </TabPane>
     <TabPane label="左机匣" name="receiver_left">
-      <Table stripe :columns="receiver_left_columns" :data="receiver_left_data" border height="1000">
+      <Table @on-selection-change="selectionChange" show-summary :summary-method="receiverSummary" stripe
+             :columns="receiver_columns" :data="receiver_data" border>
         <template slot-scope="{ row, index }" slot="operation">
           <Button type="error" size="small" @click="deleteRecord(row.id, 'right')">删除</Button>
         </template>
       </Table>
     </TabPane>
     <TabPane label="右机匣" name="receiver_right">
-      <Table stripe :columns="receiver_right_columns" :data="receiver_right_data" border height="1000">
+      <Table stripe :columns="receiver_columns" :data="receiver_data" border height="1000">
         <template slot-scope="{ row, index }" slot="operation">
           <Button type="error" size="small" @click="deleteRecord(row.id)">删除</Button>
         </template>
       </Table>
     </TabPane>
     <TabPane label="左小发" name="engine_s_left">
-      <Table stripe :columns="engine_s_left_columns" :data="engine_s_left_data" border height="1000">
+      <Table stripe :columns="engine_s_columns" :data="engine_s_data" border height="1000">
         <template slot-scope="{ row, index }" slot="operation">
           <Button type="error" size="small" @click="deleteRecord(row.id)">删除</Button>
         </template>
       </Table>
     </TabPane>
     <TabPane label="右小发" name="engine_s_right">
-      <Table stripe :columns="engine_s_right_columns" :data="engine_s_right_data" border height="1000">
+      <Table stripe :columns="engine_s_columns" :data="engine_s_data" border height="1000">
         <template slot-scope="{ row, index }" slot="operation">
           <Button type="error" size="small" @click="deleteRecord(row.id)">删除</Button>
         </template>
@@ -61,33 +64,47 @@
     <Button type="primary" shape="circle" slot="extra" @click="saveRecord">保存</Button>
   </Tabs>
 </template>
+<style>
+.ivu-table-cell {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+</style>
 <script>
 import {addResume, deleteResume, addResumeEngine} from '@/http/plane_system/base'
 import {addTime} from './addTime'
+import {isEmpty} from "@/view/resume/isEmpty";
 
 export default {
-  data () {
+  data() {
     return {
       type: 'engine_left',
       adjustOld: 0,
       adjustNew: 0,
       typeName: '选择方式',
+      selectionC: null,
 
-      engine_left_columns: [
+      engine_columns: [
+        {
+          type: 'selection',
+          width: 50,
+          align: 'center',
+          key: 'selection'
+        },
         {
           title: '日期',
           key: 'engine_date',
           align: 'center',
-          width: 150,
+          width: 140,
           render: (h, params) => {
             return h('DatePicker', {
               props: {
-                value: this.engine_left_data[params.index].engineDate,
+                value: this.engine_data[params.index].engineDate,
                 size: 'small'
               },
               on: {
-                input: (val) => {
-                  this.engine_left_data[params.index].engineDate = val
+                'on-change': (val) => {
+                  this.engine_data[params.index].engineDate = val
                 }
               }
             })
@@ -100,12 +117,12 @@ export default {
           render: (h, params) => {
             return h('InputNumber', {
               props: {
-                value: this.engine_left_data[params.index].engineStartTimes,
+                value: this.engine_data[params.index].engineStartTimes,
                 size: 'small'
               },
               on: {
                 input: (val) => {
-                  this.engine_left_data[params.index].engineStartTimes = val
+                  this.engine_data[params.index].engineStartTimes = val
                 }
               }
             })
@@ -133,14 +150,15 @@ export default {
                           count: 3
                         }
                       }),
-                      h('Input', {
+                      h('TimePicker', {
                         props: {
-                          value: this.engine_left_data[params.index].engineSGroundFlight,
+                          value: this.engine_data[params.index].engineSGroundFlight,
+                          format: "HH:mm",
                           size: 'small'
                         },
                         on: {
                           input: (val) => {
-                            this.engine_left_data[params.index].engineSGroundFlight = val
+                            this.engine_data[params.index].engineSGroundFlight = val
                           }
                         }
                       })
@@ -161,14 +179,15 @@ export default {
                           count: 3
                         }
                       }),
-                      h('Input', {
+                      h('TimePicker', {
                         props: {
-                          value: this.engine_left_data[params.index].engineSpGroundFlight,
+                          value: this.engine_data[params.index].engineSpGroundFlight,
+                          format: "HH:mm",
                           size: 'small'
                         },
                         on: {
                           input: (val) => {
-                            this.engine_left_data[params.index].engineSpGroundFlight = val
+                            this.engine_data[params.index].engineSpGroundFlight = val
                           }
                         }
                       })
@@ -192,14 +211,15 @@ export default {
                   key: 'engine_s_flight',
                   align: 'center',
                   render: (h, params) => {
-                    return h('Input', {
+                    return h('TimePicker', {
                       props: {
-                        value: this.engine_left_data[params.index].engineSFlight,
+                        value: this.engine_data[params.index].engineSFlight,
+                        format: "HH:mm",
                         size: 'small'
                       },
                       on: {
                         input: (val) => {
-                          this.engine_left_data[params.index].engineSFlight = val
+                          this.engine_data[params.index].engineSFlight = val
                         }
                       }
                     })
@@ -210,14 +230,15 @@ export default {
                   key: 'engine_sp_flight',
                   align: 'center',
                   render: (h, params) => {
-                    return h('Input', {
+                    return h('TimePicker', {
                       props: {
-                        value: this.engine_left_data[params.index].engineSpFlight,
+                        value: this.engine_data[params.index].engineSpFlight,
+                        format: "HH:mm",
                         size: 'small'
                       },
                       on: {
                         input: (val) => {
-                          this.engine_left_data[params.index].engineSpFlight = val
+                          this.engine_data[params.index].engineSpFlight = val
                         }
                       }
                     })
@@ -252,14 +273,14 @@ export default {
                   render: (h, params) => {
                     return h('TimePicker', {
                       props: {
-                        value: this.engine_left_data[params.index].engineSStateWork,
+                        value: this.engine_data[params.index].engineSStateWork,
                         size: 'small'
                       },
                       on: {
                         input: (val) => {
-                          this.engine_left_data[params.index].engineSStateWork = val
+                          this.engine_data[params.index].engineSStateWork = val
                           // 如果值的变化需要动态计算
-                          this.engine_left_data[params.index].engineSpStateWork = addTime(val, this.engine_left_data[params.index].engineYsStateWork)
+                          this.engine_data[params.index].engineSpStateWork = addTime(val, this.engine_data[params.index].engineYsStateWork)
                         }
                       }
                     })
@@ -273,14 +294,14 @@ export default {
                   render: (h, params) => {
                     return h('TimePicker', {
                       props: {
-                        value: this.engine_left_data[params.index].engineYsStateWork,
+                        value: this.engine_data[params.index].engineYsStateWork,
                         size: 'small'
                       },
                       on: {
                         input: (val) => {
-                          this.engine_left_data[params.index].engineYsStateWork = val
+                          this.engine_data[params.index].engineYsStateWork = val
                           // 如果值的变化需要动态计算
-                          this.engine_left_data[params.index].engineSpStateWork = addTime(this.engine_left_data[params.index].engineSStateWork, val)
+                          this.engine_data[params.index].engineSpStateWork = addTime(this.engine_data[params.index].engineSStateWork, val)
                         }
                       }
                     })
@@ -292,14 +313,14 @@ export default {
                   align: 'center',
                   width: 130,
                   render: (h, params) => {
-                    return h('Input', {
+                    return h('TimePicker', {
                       props: {
-                        value: this.engine_left_data[params.index].engineSpStateWork,
+                        value: this.engine_data[params.index].engineSpStateWork,
                         size: 'small'
                       },
                       on: {
                         input: (val) => {
-                          this.engine_left_data[params.index].engineSpStateWork = val
+                          this.engine_data[params.index].engineSpStateWork = val
                         }
                       }
                     })
@@ -322,14 +343,15 @@ export default {
                   key: 'engine_s_all_state_work',
                   align: 'center',
                   render: (h, params) => {
-                    return h('Input', {
+                    return h('TimePicker', {
                       props: {
-                        value: this.engine_left_data[params.index].engineSAllStateWork,
+                        value: this.engine_data[params.index].engineSAllStateWork,
+                        format: "HH:mm",
                         size: 'small'
                       },
                       on: {
                         input: (val) => {
-                          this.engine_left_data[params.index].engineSAllStateWork = val
+                          this.engine_data[params.index].engineSAllStateWork = val
                         }
                       }
                     })
@@ -340,14 +362,15 @@ export default {
                   key: 'engine_sp_all_state_work',
                   align: 'center',
                   render: (h, params) => {
-                    return h('Input', {
+                    return h('TimePicker', {
                       props: {
-                        value: this.engine_left_data[params.index].engineSpAllStateWork,
+                        value: this.engine_data[params.index].engineSpAllStateWork,
+                        format: "HH:mm",
                         size: 'small'
                       },
                       on: {
                         input: (val) => {
-                          this.engine_left_data[params.index].engineSpAllStateWork = val
+                          this.engine_data[params.index].engineSpAllStateWork = val
                         }
                       }
                     })
@@ -372,30 +395,34 @@ export default {
                   render: (h, params) => {
                     return h('InputNumber', {
                       props: {
-                        value: this.engine_left_data[params.index].engineSMainCycle,
+                        value: this.engine_data[params.index].engineSMainCycle,
                         size: 'small'
                       },
                       on: {
                         input: (val) => {
-                          this.engine_left_data[params.index].engineSMainCycle = val
+                          this.engine_data[params.index].engineSMainCycle = val
                         },
                         'on-focus': () => {
                           // 聚焦时记录旧值
-                          this.adjustOld = this.engine_left_data[params.index].engineSMainCycle
+                          if (params.index === 0) {
+                            this.adjustOld = this.engine_data[params.index].engineSMainCycle
+                          } else {
+                            this.adjustOld = this.engine_data[params.index].engineSMainCycle - this.engine_data[params.index - 1].engineSMainCycle
+                          }
                         },
                         'on-blur': () => {
                           // 失焦时记录新值
-                          this.adjustNew = this.engine_left_data[params.index].engineSMainCycle
+                          this.adjustNew = this.engine_data[params.index].engineSMainCycle
                           // 如果没有改变则不更新
                           if (this.adjustOld === this.adjustNew) {
                             return
                           }
                           // 如果不是第一个则需要加上上面的值
                           if (params.index > 0) {
-                            this.engine_left_data[params.index].engineSMainCycle += this.engine_left_data[params.index - 1].engineSMainCycle
+                            this.engine_data[params.index].engineSMainCycle += this.engine_data[params.index - 1].engineSMainCycle
                           }
                           // 变更值的时候需要动态计算下面的值
-                          this.adjustBelow(params.index)
+                          this.adjustBelow12(params.index)
                         }
                       }
                     })
@@ -408,30 +435,34 @@ export default {
                   render: (h, params) => {
                     return h('InputNumber', {
                       props: {
-                        value: this.engine_left_data[params.index].engineSpMainCycle,
+                        value: this.engine_data[params.index].engineSpMainCycle,
                         size: 'small'
                       },
                       on: {
                         input: (val) => {
-                          this.engine_left_data[params.index].engineSpMainCycle = val
+                          this.engine_data[params.index].engineSpMainCycle = val
                         },
                         'on-focus': () => {
                           // 聚焦时记录旧值
-                          this.adjustOld = this.engine_left_data[params.index].engineSpMainCycle
+                          if (params.index === 0) {
+                            this.adjustOld = this.engine_data[params.index].engineSpMainCycle
+                          } else {
+                            this.adjustOld = this.engine_data[params.index].engineSpMainCycle - this.engine_data[params.index - 1].engineSpMainCycle
+                          }
                         },
                         'on-blur': () => {
                           // 失焦时记录新值
-                          this.adjustNew = this.engine_left_data[params.index].engineSpMainCycle
+                          this.adjustNew = this.engine_data[params.index].engineSpMainCycle
                           // 如果没有改变则不更新
                           if (this.adjustOld === this.adjustNew) {
                             return
                           }
                           // 如果不是第一个则需要加上上面的值
                           if (params.index > 0) {
-                            this.engine_left_data[params.index].engineSpMainCycle += this.engine_left_data[params.index - 1].engineSpMainCycle
+                            this.engine_data[params.index].engineSpMainCycle += this.engine_data[params.index - 1].engineSpMainCycle
                           }
                           // 变更值的时候需要动态计算下面的值
-                          this.adjustBelow1(params.index)
+                          this.adjustBelow13(params.index)
                         }
                       }
                     })
@@ -443,324 +474,26 @@ export default {
         },
         {
           title: '履历本主管签字',
-          align: 'center'
+          align: 'center',
+          key: 'sign'
         },
         {
           title: '操作',
           slot: 'operation',
-          align: 'center'
+          align: 'center',
+          key: 'operation'
         }
       ],
-      engine_left_data: [],
-      engine_right_columns: [
-        {
-          title: '日期',
-          key: 'engine_date',
-          align: 'center',
-          width: 140,
-          render: (h, params) => {
-            return h('DatePicker', {
-              props: {
-                value: this.engine_right_data[params.index].engineDate,
-                size: 'small'
-              },
-              on: {
-                input: (val) => {
-                  this.engine_right_data[params.index].engineDate = val
-                }
-              }
-            })
-          }
-        },
-        {
-          title: '发动机起动次数',
-          key: 'engine_start_times',
-          align: 'center',
-          render: (h, params) => {
-            return h('InputNumber', {
-              props: {
-                value: this.engine_right_data[params.index].engineStartTimes,
-                size: 'small'
-              },
-              on: {
-                input: (val) => {
-                  this.engine_right_data[params.index].engineStartTimes = val
-                }
-              }
-            })
-          }
-        },
-        {
-          title: '发动机地面和飞行工作持续时间 （h,min）',
-          align: 'center',
-          children: [
-            {
-              title: '状态',
-              align: 'center',
-              children: [
-                {
-                  title: 'Б',
-                  key: 'engine_s_ground_flight',
-                  align: 'center',
-                  render: (h, params) => {
-                    return h('Input', {
-                      props: {
-                        value: this.engine_right_data[params.index].engineSGroundFlight,
-                        size: 'small'
-                      },
-                      on: {
-                        input: (val) => {
-                          this.engine_right_data[params.index].engineSGroundFlight = val
-                        }
-                      }
-                    })
-                  }
-                },
-                {
-                  title: 'Б+УБ',
-                  key: 'engine_sp_ground_flight',
-                  align: 'center',
-                  render: (h, params) => {
-                    return h('Input', {
-                      props: {
-                        value: this.engine_right_data[params.index].engineSpGroundFlight,
-                        size: 'small'
-                      },
-                      on: {
-                        input: (val) => {
-                          this.engine_right_data[params.index].engineSpGroundFlight = val
-                        }
-                      }
-                    })
-                  }
-                }
-              ]
-            }
-          ]
-        },
-        {
-          title: '发动机飞行工作持续时间（h,min）',
-          align: 'center',
-          children: [
-            {
-              title: '状态',
-              align: 'center',
-              children: [
-                {
-                  title: 'Б',
-                  key: 'engine_s_flight',
-                  align: 'center',
-                  render: (h, params) => {
-                    return h('Input', {
-                      props: {
-                        value: this.engine_right_data[params.index].engineSFlight,
-                        size: 'small'
-                      },
-                      on: {
-                        input: (val) => {
-                          this.engine_right_data[params.index].engineSFlight = val
-                        }
-                      }
-                    })
-                  }
-                },
-                {
-                  title: 'Б+УБ',
-                  key: 'engine_sp_flight',
-                  align: 'center',
-                  render: (h, params) => {
-                    return h('Input', {
-                      props: {
-                        value: this.engine_right_data[params.index].engineSpFlight,
-                        size: 'small'
-                      },
-                      on: {
-                        input: (val) => {
-                          this.engine_right_data[params.index].engineSpFlight = val
-                        }
-                      }
-                    })
-                  }
-                }
-              ]
-            }
-          ]
-        },
-        {
-          title: '发动机м+ф状态工作累计（地面м+ф状态工作按100％考虑）（h,min,s）',
-          align: 'center',
-          children: [
-            {
-              title: '状态',
-              align: 'center',
-              children: [
-                {
-                  title: 'Б',
-                  key: 'engine_s_state_work',
-                  align: 'center',
-                  render: (h, params) => {
-                    return h('Input', {
-                      props: {
-                        value: this.engine_right_data[params.index].engineSStateWork,
-                        size: 'small'
-                      },
-                      on: {
-                        input: (val) => {
-                          this.engine_right_data[params.index].engineSStateWork = val
-                        }
-                      }
-                    })
-                  }
-                },
-                {
-                  title: 'УБ',
-                  key: 'engine_ys_state_work',
-                  align: 'center',
-                  render: (h, params) => {
-                    return h('Input', {
-                      props: {
-                        value: this.engine_right_data[params.index].engineYsStateWork,
-                        size: 'small'
-                      },
-                      on: {
-                        input: (val) => {
-                          this.engine_right_data[params.index].engineYsStateWork = val
-                        }
-                      }
-                    })
-                  }
-                },
-                {
-                  title: 'Б+УБ',
-                  key: 'engine_sp_state_work',
-                  align: 'center',
-                  render: (h, params) => {
-                    return h('Input', {
-                      props: {
-                        value: this.engine_right_data[params.index].engineSpStateWork,
-                        size: 'small'
-                      },
-                      on: {
-                        input: (val) => {
-                          this.engine_right_data[params.index].engineSpStateWork = val
-                        }
-                      }
-                    })
-                  }
-                }
-              ]
-            }
-          ]
-        },
-        {
-          title: '发动机全部状态工作累计（地面工作按20％考虑）（h,min）',
-          align: 'center',
-          children: [
-            {
-              title: '状态',
-              align: 'center',
-              children: [
-                {
-                  title: 'Б',
-                  key: 'engine_s_all_state_work',
-                  align: 'center',
-                  render: (h, params) => {
-                    return h('Input', {
-                      props: {
-                        value: this.engine_right_data[params.index].engineSAllStateWork,
-                        size: 'small'
-                      },
-                      on: {
-                        input: (val) => {
-                          this.engine_right_data[params.index].engineSAllStateWork = val
-                        }
-                      }
-                    })
-                  }
-                },
-                {
-                  title: 'Б+УБ',
-                  key: 'engine_sp_all_state_work',
-                  align: 'center',
-                  render: (h, params) => {
-                    return h('Input', {
-                      props: {
-                        value: this.engine_right_data[params.index].engineSpAllStateWork,
-                        size: 'small'
-                      },
-                      on: {
-                        input: (val) => {
-                          this.engine_right_data[params.index].engineSpAllStateWork = val
-                        }
-                      }
-                    })
-                  }
-                }
-              ]
-            }
-          ]
-        },
-        {
-          title: '主循环次数（0-M-0）',
-          align: 'center',
-          children: [
-            {
-              title: '状态',
-              align: 'center',
-              children: [
-                {
-                  title: 'Б',
-                  key: 'engine_s_main_cycle',
-                  align: 'center',
-                  render: (h, params) => {
-                    return h('InputNumber', {
-                      props: {
-                        value: this.engine_right_data[params.index].engineSMainCycle,
-                        size: 'small'
-                      },
-                      on: {
-                        input: (val) => {
-                          this.engine_right_data[params.index].engineSMainCycle = val
-                        }
-                      }
-                    })
-                  }
-                },
-                {
-                  title: 'Б+УБ',
-                  key: 'engine_sp_main_cycle',
-                  align: 'center',
-                  render: (h, params) => {
-                    return h('InputNumber', {
-                      props: {
-                        value: this.engine_right_data[params.index].engineSpMainCycle,
-                        size: 'small'
-                      },
-                      on: {
-                        input: (val) => {
-                          this.engine_right_data[params.index].engineSpMainCycle = val
-                        }
-                      }
-                    })
-                  }
-                }
-              ]
-            }
-          ]
-        },
-        {
-          title: '履历本主管签字',
-          align: 'center'
-        },
-        {
-          title: '操作',
-          slot: 'operation',
-          align: 'center'
-        }
-      ],
-      engine_right_data: [],
+      engine_data: [],
+      engine_data_empty: [],
 
-      receiver_left_columns: [
+      receiver_columns: [
+        {
+          type: 'selection',
+          width: 50,
+          align: 'center',
+          key: 'selection'
+        },
         {
           title: '日期',
           key: 'receiver_date',
@@ -769,12 +502,12 @@ export default {
           render: (h, params) => {
             return h('DatePicker', {
               props: {
-                value: this.receiver_left_data[params.index].receiverDate,
+                value: this.receiver_data[params.index].receiverDate,
                 size: 'small'
               },
               on: {
-                input: (val) => {
-                  this.receiver_left_data[params.index].receiverDate = val
+                'on-change': (val) => {
+                  this.receiver_data[params.index].receiverDate = val
                 }
               }
             })
@@ -787,12 +520,12 @@ export default {
           render: (h, params) => {
             return h('InputNumber', {
               props: {
-                value: this.receiver_left_data[params.index].receiverStartTimes,
+                value: this.receiver_data[params.index].receiverStartTimes,
                 size: 'small'
               },
               on: {
                 input: (val) => {
-                  this.receiver_left_data[params.index].receiverStartTimes = val
+                  this.receiver_data[params.index].receiverStartTimes = val
                 }
               }
             })
@@ -811,14 +544,15 @@ export default {
                   key: 'receiver_s_ground_flight',
                   align: 'center',
                   render: (h, params) => {
-                    return h('Input', {
+                    return h('TimePicker', {
                       props: {
-                        value: this.receiver_left_data[params.index].receiverSGroundFlight,
+                        value: this.receiver_data[params.index].receiverSGroundFlight,
+                        format: "HH:mm",
                         size: 'small'
                       },
                       on: {
                         input: (val) => {
-                          this.receiver_left_data[params.index].receiverSGroundFlight = val
+                          this.receiver_data[params.index].receiverSGroundFlight = val
                         }
                       }
                     })
@@ -829,14 +563,15 @@ export default {
                   key: 'receiver_sp_ground_flight',
                   align: 'center',
                   render: (h, params) => {
-                    return h('Input', {
+                    return h('TimePicker', {
                       props: {
-                        value: this.receiver_left_data[params.index].receiverSpGroundFlight,
+                        value: this.receiver_data[params.index].receiverSpGroundFlight,
+                        format: "HH:mm",
                         size: 'small'
                       },
                       on: {
                         input: (val) => {
-                          this.receiver_left_data[params.index].receiverSpGroundFlight = val
+                          this.receiver_data[params.index].receiverSpGroundFlight = val
                         }
                       }
                     })
@@ -859,14 +594,15 @@ export default {
                   key: 'receiver_s_flight',
                   align: 'center',
                   render: (h, params) => {
-                    return h('Input', {
+                    return h('TimePicker', {
                       props: {
-                        value: this.receiver_left_data[params.index].receiverSFlight,
+                        value: this.receiver_data[params.index].receiverSFlight,
+                        format: "HH:mm",
                         size: 'small'
                       },
                       on: {
                         input: (val) => {
-                          this.receiver_left_data[params.index].receiverSFlight = val
+                          this.receiver_data[params.index].receiverSFlight = val
                         }
                       }
                     })
@@ -877,14 +613,15 @@ export default {
                   key: 'receiver_sp_flight',
                   align: 'center',
                   render: (h, params) => {
-                    return h('Input', {
+                    return h('TimePicker', {
                       props: {
-                        value: this.receiver_left_data[params.index].receiverSpFlight,
+                        value: this.receiver_data[params.index].receiverSpFlight,
+                        format: "HH:mm",
                         size: 'small'
                       },
                       on: {
                         input: (val) => {
-                          this.receiver_left_data[params.index].receiverSpFlight = val
+                          this.receiver_data[params.index].receiverSpFlight = val
                         }
                       }
                     })
@@ -907,14 +644,14 @@ export default {
                   key: 'receiver_s_state_work',
                   align: 'center',
                   render: (h, params) => {
-                    return h('Input', {
+                    return h('TimePicker', {
                       props: {
-                        value: this.receiver_left_data[params.index].receiverSStateWork,
+                        value: this.receiver_data[params.index].receiverSStateWork,
                         size: 'small'
                       },
                       on: {
                         input: (val) => {
-                          this.receiver_left_data[params.index].receiverSStateWork = val
+                          this.receiver_data[params.index].receiverSStateWork = val
                         }
                       }
                     })
@@ -925,14 +662,14 @@ export default {
                   key: 'receiver_ys_state_work',
                   align: 'center',
                   render: (h, params) => {
-                    return h('Input', {
+                    return h('TimePicker', {
                       props: {
-                        value: this.receiver_left_data[params.index].receiverYsStateWork,
+                        value: this.receiver_data[params.index].receiverYsStateWork,
                         size: 'small'
                       },
                       on: {
                         input: (val) => {
-                          this.receiver_left_data[params.index].receiverYsStateWork = val
+                          this.receiver_data[params.index].receiverYsStateWork = val
                         }
                       }
                     })
@@ -943,14 +680,14 @@ export default {
                   key: 'receiver_sp_state_work',
                   align: 'center',
                   render: (h, params) => {
-                    return h('Input', {
+                    return h('TimePicker', {
                       props: {
-                        value: this.receiver_left_data[params.index].receiverSpStateWork,
+                        value: this.receiver_data[params.index].receiverSpStateWork,
                         size: 'small'
                       },
                       on: {
                         input: (val) => {
-                          this.receiver_left_data[params.index].receiverSpStateWork = val
+                          this.receiver_data[params.index].receiverSpStateWork = val
                         }
                       }
                     })
@@ -973,14 +710,15 @@ export default {
                   key: 'receiver_s_all_state_work',
                   align: 'center',
                   render: (h, params) => {
-                    return h('Input', {
+                    return h('TimePicker', {
                       props: {
-                        value: this.receiver_left_data[params.index].receiverSAllStateWork,
+                        value: this.receiver_data[params.index].receiverSAllStateWork,
+                        format: "HH:mm",
                         size: 'small'
                       },
                       on: {
                         input: (val) => {
-                          this.receiver_left_data[params.index].receiverSAllStateWork = val
+                          this.receiver_data[params.index].receiverSAllStateWork = val
                         }
                       }
                     })
@@ -991,14 +729,15 @@ export default {
                   key: 'receiver_sp_all_state_work',
                   align: 'center',
                   render: (h, params) => {
-                    return h('Input', {
+                    return h('TimePicker', {
                       props: {
-                        value: this.receiver_left_data[params.index].receiverSpAllStateWork,
+                        value: this.receiver_data[params.index].receiverSpAllStateWork,
+                        format: "HH:mm",
                         size: 'small'
                       },
                       on: {
                         input: (val) => {
-                          this.receiver_left_data[params.index].receiverSpAllStateWork = val
+                          this.receiver_data[params.index].receiverSpAllStateWork = val
                         }
                       }
                     })
@@ -1011,281 +750,27 @@ export default {
         {
           title: '操作',
           slot: 'operation',
-          align: 'center'
+          align: 'center',
+          key: 'operation'
         }
       ],
-      receiver_left_data: [],
-      receiver_right_columns: [
-        {
-          title: '日期',
-          key: 'receiver_date',
-          align: 'center',
-          width: 140,
-          render: (h, params) => {
-            return h('DatePicker', {
-              props: {
-                value: this.receiver_right_data[params.index].receiverDate,
-                size: 'small'
-              },
-              on: {
-                input: (val) => {
-                  this.receiver_right_data[params.index].receiverDate = val
-                }
-              }
-            })
-          }
-        },
-        {
-          title: '外置机匣起动次数',
-          key: 'receiver_start_times',
-          align: 'center',
-          render: (h, params) => {
-            return h('InputNumber', {
-              props: {
-                value: this.receiver_right_data[params.index].receiverStartTimes,
-                size: 'small'
-              },
-              on: {
-                input: (val) => {
-                  this.receiver_right_data[params.index].receiverStartTimes = val
-                }
-              }
-            })
-          }
-        },
-        {
-          title: '外置机匣地面和飞行工作持续时间（h,min）',
-          align: 'center',
-          children: [
-            {
-              title: '状态',
-              align: 'center',
-              children: [
-                {
-                  title: 'Б',
-                  key: 'receiver_s_ground_flight',
-                  align: 'center',
-                  render: (h, params) => {
-                    return h('Input', {
-                      props: {
-                        value: this.receiver_right_data[params.index].receiverSGroundFlight,
-                        size: 'small'
-                      },
-                      on: {
-                        input: (val) => {
-                          this.receiver_right_data[params.index].receiverSGroundFlight = val
-                        }
-                      }
-                    })
-                  }
-                },
-                {
-                  title: 'Б+УБ',
-                  key: 'receiver_sp_ground_flight',
-                  align: 'center',
-                  render: (h, params) => {
-                    return h('Input', {
-                      props: {
-                        value: this.receiver_right_data[params.index].receiverSpGroundFlight,
-                        size: 'small'
-                      },
-                      on: {
-                        input: (val) => {
-                          this.receiver_right_data[params.index].receiverSpGroundFlight = val
-                        }
-                      }
-                    })
-                  }
-                }
-              ]
-            }
-          ]
-        },
-        {
-          title: '外置机匣飞行工作持续时间（h,min）',
-          align: 'center',
-          children: [
-            {
-              title: '状态',
-              align: 'center',
-              children: [
-                {
-                  title: 'Б',
-                  key: 'receiver_s_flight',
-                  align: 'center',
-                  render: (h, params) => {
-                    return h('Input', {
-                      props: {
-                        value: this.receiver_right_data[params.index].receiverSFlight,
-                        size: 'small'
-                      },
-                      on: {
-                        input: (val) => {
-                          this.receiver_right_data[params.index].receiverSFlight = val
-                        }
-                      }
-                    })
-                  }
-                },
-                {
-                  title: 'Б+УБ',
-                  key: 'receiver_sp_flight',
-                  align: 'center',
-                  render: (h, params) => {
-                    return h('Input', {
-                      props: {
-                        value: this.receiver_right_data[params.index].receiverSpFlight,
-                        size: 'small'
-                      },
-                      on: {
-                        input: (val) => {
-                          this.receiver_right_data[params.index].receiverSpFlight = val
-                        }
-                      }
-                    })
-                  }
-                }
-              ]
-            }
-          ]
-        },
-        {
-          title: '外置机匣м+ф状态工作累计（地面м+ф状态工作按100％考虑）（h,min,s）',
-          align: 'center',
-          children: [
-            {
-              title: '状态',
-              align: 'center',
-              children: [
-                {
-                  title: 'Б',
-                  key: 'receiver_s_state_work',
-                  align: 'center',
-                  render: (h, params) => {
-                    return h('Input', {
-                      props: {
-                        value: this.receiver_right_data[params.index].receiverSStateWork,
-                        size: 'small'
-                      },
-                      on: {
-                        input: (val) => {
-                          this.receiver_right_data[params.index].receiverSStateWork = val
-                        }
-                      }
-                    })
-                  }
-                },
-                {
-                  title: 'УБ',
-                  key: 'receiver_ys_state_work',
-                  align: 'center',
-                  render: (h, params) => {
-                    return h('Input', {
-                      props: {
-                        value: this.receiver_right_data[params.index].receiverYsStateWork,
-                        size: 'small'
-                      },
-                      on: {
-                        input: (val) => {
-                          this.receiver_right_data[params.index].receiverYsStateWork = val
-                        }
-                      }
-                    })
-                  }
-                },
-                {
-                  title: 'Б+УБ',
-                  key: 'receiver_sp_state_work',
-                  align: 'center',
-                  render: (h, params) => {
-                    return h('Input', {
-                      props: {
-                        value: this.receiver_right_data[params.index].receiverSpStateWork,
-                        size: 'small'
-                      },
-                      on: {
-                        input: (val) => {
-                          this.receiver_right_data[params.index].receiverSpStateWork = val
-                        }
-                      }
-                    })
-                  }
-                }
-              ]
-            }
-          ]
-        },
-        {
-          title: '外置机匣全部状态工作累计（地面工作按20％考虑）（h,min）',
-          align: 'center',
-          children: [
-            {
-              title: '状态',
-              align: 'center',
-              children: [
-                {
-                  title: 'Б',
-                  key: 'receiver_s_all_state_work',
-                  align: 'center',
-                  render: (h, params) => {
-                    return h('Input', {
-                      props: {
-                        value: this.receiver_right_data[params.index].receiverSAllStateWork,
-                        size: 'small'
-                      },
-                      on: {
-                        input: (val) => {
-                          this.receiver_right_data[params.index].receiverSAllStateWork = val
-                        }
-                      }
-                    })
-                  }
-                },
-                {
-                  title: 'Б+УБ',
-                  key: 'receiver_sp_all_state_work',
-                  align: 'center',
-                  render: (h, params) => {
-                    return h('Input', {
-                      props: {
-                        value: this.receiver_right_data[params.index].receiverSpAllStateWork,
-                        size: 'small'
-                      },
-                      on: {
-                        input: (val) => {
-                          this.receiver_right_data[params.index].receiverSpAllStateWork = val
-                        }
-                      }
-                    })
-                  }
-                }
-              ]
-            }
-          ]
-        },
-        {
-          title: '操作',
-          slot: 'operation',
-          align: 'center'
-        }
-      ],
-      receiver_right_data: [],
+      receiver_data: [],
 
-      engine_s_left_columns: [
+      engine_s_columns: [
         {
           title: '日期',
           key: 's_engine_date',
           align: 'center',
-          width: 140,
+          width: 150,
           render: (h, params) => {
             return h('DatePicker', {
               props: {
-                value: this.engine_s_left_data[params.index].SEngineDate,
+                value: this.engine_s_data[params.index].sEngineDate,
                 size: 'small'
               },
               on: {
-                input: (val) => {
-                  this.engine_s_left_data[params.index].SEngineDate = val
+                'on-change': (val) => {
+                  this.engine_s_data[params.index].sEngineDate = val
                 }
               }
             })
@@ -1298,12 +783,16 @@ export default {
           render: (h, params) => {
             return h('InputNumber', {
               props: {
-                value: this.engine_s_left_data[params.index].sEngineStartTimes,
+                value: this.engine_s_data[params.index].sEngineStartTimes,
                 size: 'small'
               },
               on: {
                 input: (val) => {
-                  this.engine_s_left_data[params.index].sEngineStartTimes = val
+                  this.engine_s_data[params.index].sEngineStartTimes = val
+                  this.engine_s_data[params.index].sEngineAllStart = val
+                  if (params.index > 0) {
+                    this.engine_s_data[params.index].sEngineAllStart = this.engine_s_data[params.index - 1].sEngineAllStart + val
+                  }
                 }
               }
             })
@@ -1320,12 +809,12 @@ export default {
               render: (h, params) => {
                 return h('Input', {
                   props: {
-                    value: this.engine_s_left_data[params.index].sEngineLastRepair,
+                    value: this.engine_s_data[params.index].sEngineLastRepair,
                     size: 'small'
                   },
                   on: {
                     input: (val) => {
-                      this.engine_s_left_data[params.index].sEngineLastRepair = val
+                      this.engine_s_data[params.index].sEngineLastRepair = val
                     }
                   }
                 })
@@ -1338,12 +827,12 @@ export default {
               render: (h, params) => {
                 return h('Input', {
                   props: {
-                    value: this.engine_s_left_data[params.index].sEngineLastOilSealRepair,
+                    value: this.engine_s_data[params.index].sEngineLastOilSealRepair,
                     size: 'small'
                   },
                   on: {
                     input: (val) => {
-                      this.engine_s_left_data[params.index].sEngineLastOilSealRepair = val
+                      this.engine_s_data[params.index].sEngineLastOilSealRepair = val
                     }
                   }
                 })
@@ -1363,12 +852,12 @@ export default {
               render: (h, params) => {
                 return h('Input', {
                   props: {
-                    value: this.engine_s_left_data[params.index].sEngineAllStart,
+                    value: this.engine_s_data[params.index].sEngineAllStart,
                     size: 'small'
                   },
                   on: {
                     input: (val) => {
-                      this.engine_s_left_data[params.index].sEngineAllStart = val
+                      this.engine_s_data[params.index].sEngineAllStart = val
                     }
                   }
                 })
@@ -1381,12 +870,12 @@ export default {
               render: (h, params) => {
                 return h('Input', {
                   props: {
-                    value: this.engine_s_left_data[params.index].sEngineAllOilSeal,
+                    value: this.engine_s_data[params.index].sEngineAllOilSeal,
                     size: 'small'
                   },
                   on: {
                     input: (val) => {
-                      this.engine_s_left_data[params.index].sEngineAllOilSeal = val
+                      this.engine_s_data[params.index].sEngineAllOilSeal = val
                     }
                   }
                 })
@@ -1400,278 +889,125 @@ export default {
           align: 'center'
         }
       ],
-      engine_s_left_data: [],
-      engine_s_right_columns: [
-        {
-          title: '日期',
-          key: 's_engine_date',
-          align: 'center',
-          width: 140,
-          render: (h, params) => {
-            return h('DatePicker', {
-              props: {
-                value: this.engine_s_right_data[params.index].SEngineDate,
-                size: 'small'
-              },
-              on: {
-                input: (val) => {
-                  this.engine_s_right_data[params.index].SEngineDate = val
-                }
-              }
-            })
-          }
-        },
-        {
-          title: '小发起动次数',
-          key: 's_engine_start_times',
-          align: 'center',
-          render: (h, params) => {
-            return h('InputNumber', {
-              props: {
-                value: this.engine_s_right_data[params.index].sEngineStartTimes,
-                size: 'small'
-              },
-              on: {
-                input: (val) => {
-                  this.engine_s_right_data[params.index].sEngineStartTimes = val
-                }
-              }
-            })
-          }
-        },
-        {
-          title: '最后修理之后',
-          align: 'center',
-          children: [
-            {
-              title: '起动次数',
-              key: 's_engine_last_repair',
-              align: 'center',
-              render: (h, params) => {
-                return h('Input', {
-                  props: {
-                    value: this.engine_s_right_data[params.index].sEngineLastRepair,
-                    size: 'small'
-                  },
-                  on: {
-                    input: (val) => {
-                      this.engine_s_right_data[params.index].sEngineLastRepair = val
-                    }
-                  }
-                })
-              }
-            },
-            {
-              title: '冷转油封启封次数',
-              key: 's_engine_last_oil_seal_repair',
-              align: 'center',
-              render: (h, params) => {
-                return h('Input', {
-                  props: {
-                    value: this.engine_s_right_data[params.index].sEngineLastOilSealRepair,
-                    size: 'small'
-                  },
-                  on: {
-                    input: (val) => {
-                      this.engine_s_right_data[params.index].sEngineLastOilSealRepair = val
-                    }
-                  }
-                })
-              }
-            }
-
-          ]
-        },
-        {
-          title: '从开始使用总和',
-          align: 'center',
-          children: [
-            {
-              title: '起动次数',
-              key: 's_engine_all_start',
-              align: 'center',
-              render: (h, params) => {
-                return h('Input', {
-                  props: {
-                    value: this.engine_s_right_data[params.index].sEngineAllStart,
-                    size: 'small'
-                  },
-                  on: {
-                    input: (val) => {
-                      this.engine_s_right_data[params.index].sEngineAllStart = val
-                    }
-                  }
-                })
-              }
-            },
-            {
-              title: '冷转油封启封次数',
-              key: 's_engine_all_oil_seal',
-              align: 'center',
-              render: (h, params) => {
-                return h('Input', {
-                  props: {
-                    value: this.engine_s_right_data[params.index].sEngineAllOilSeal,
-                    size: 'small'
-                  },
-                  on: {
-                    input: (val) => {
-                      this.engine_s_right_data[params.index].sEngineAllOilSeal = val
-                    }
-                  }
-                })
-              }
-            }
-          ]
-        },
-        {
-          title: '操作',
-          slot: 'operation',
-          align: 'center'
-        }
-      ],
-      engine_s_right_data: []
+      engine_s_data: []
     }
   },
 
-  created () {
+  created() {
     this.getData()
   },
 
-  mounted () {
+  mounted() {
   },
 
   methods: {
-    getData () {
+    getData() {
       this.$get(`/plane/getResumeById/${this.$route.query['id']}/${this.type}`).then(res => {
         if (res) {
-          if (this.type === 'engine_left') {
-            this.engine_left_data = res.data
-          } else if (this.type === 'engine_right') {
-            this.engine_right_data = res.data
-          } else if (this.type === 'receiver_left') {
-            this.receiver_left_data = res.data
-          } else if (this.type === 'receiver_right') {
-            this.receiver_right_data = res.data
-          } else if (this.type === 'engine_s_left') {
-            this.engine_s_left_data = res.data
-          } else if (this.type === 'engine_s_right') {
-            this.engine_s_right_data = res.data
+          if (this.type === 'engine_left' || this.type === 'engine_right') {
+            this.engine_data = res.data
+          } else if (this.type === 'receiver_left' || this.type === 'receiver_right') {
+            this.receiver_data = res.data
+          } else if (this.type === 'engine_s_left' || this.type === 'engine_s_right') {
+            this.engine_s_data = res.data
+            let len = this.engine_s_data.length
+            if (len > 0) {
+              this.engine_s_data[0].sEngineAllStart = this.engine_s_data[0].sEngineStartTimes
+              for (let i = 1; i < len; i++) {
+                this.engine_s_data[i].sEngineAllStart = this.engine_s_data[i - 1].sEngineAllStart + this.engine_s_data[i].sEngineStartTimes
+              }
+            }
           }
         } else {
           this.$Message.error('请求失败')
         }
       })
     },
-    changeType (type) {
+    changeType(type) {
+      this.engine_data = []
+      this.receiver_data = []
+
       this.type = type
       this.getData()
     },
-    deleteRecord (id) {
+    deleteRecord(id) {
       deleteResume('/plane/deleteResume/' + id).then(res => {
         this.$Message.success('删除成功!')
-        this.engine_left_data = []
+        this.engine_data = []
         this.getData()
       })
     },
-    addRecord () {
-      if (this.type === 'engine_left') {
-        this.engine_left_data.push({
-          type: 'left',
+    addRecord() {
+      if (this.type === 'engine_left' || this.type === 'engine_right') {
+        this.engine_data.push({
+          type: this.type === 'engine_left' ? 'left' : 'right',
           planeId: this.$route.query['id'],
           engineStartTimes: null,
           engineSMainCycle: null,
           engineSpMainCycle: null,
           engineSpStateWork: ''
         })
-      } else if (this.type === 'engine_right') {
-        this.engine_right_data.push({
-          type: 'right',
-          planeId: this.$route.query['id'],
-          engineStartTimes: null,
-          engineSMainCycle: null,
-          engineSpMainCycle: null,
-          engineSpStateWork: ''
-        })
-      } else if (this.type === 'receiver_left') {
-        this.receiver_left_data.push({
-          type: 'left',
+      } else if (this.type === 'receiver_left' || this.type === 'receiver_right') {
+        this.receiver_data.push({
+          type: this.type === 'receiver_left' ? 'left' : 'right',
           planeId: this.$route.query['id'],
           receiverStartTimes: null
         })
-      } else if (this.type === 'receiver_right') {
-        this.receiver_right_data.push({
-          type: 'right',
-          planeId: this.$route.query['id'],
-          receiverStartTimes: null
-        })
-      } else if (this.type === 'engine_s_left') {
-        this.engine_s_left_data.push({
-          type: 'left',
-          planeId: this.$route.query['id'],
-          sEngineStartTimes: null
-        })
-      } else if (this.type === 'engine_s_right') {
-        this.engine_s_right_data.push({
-          type: 'right',
+      } else if (this.type === 'engine_s_left' || this.type === 'engine_s_right') {
+        this.engine_s_data.push({
+          type: this.type === 'engine_s_left' ? 'left' : 'right',
           planeId: this.$route.query['id'],
           sEngineStartTimes: null
         })
       }
     },
-    saveRecord () {
+    saveRecord() {
       let data = []
 
-      if (this.type === 'engine_left') {
-        data = this.engine_left_data
-      } else if (this.type === 'engine_right') {
-        data = this.engine_right_data
-      } else if (this.type === 'receiver_left') {
-        data = this.receiver_left_data
-      } else if (this.type === 'receiver_right') {
-        data = this.receiver_right_data
-      } else if (this.type === 'engine_s_left') {
-        data = this.engine_s_left_data
-      } else if (this.type === 'engine_s_right') {
-        data = this.engine_s_right_data
+      if (this.type === 'engine_left' || this.type === 'engine_right') {
+        data = this.engine_data
+      } else if (this.type === 'receiver_left' || this.type === 'receiver_right') {
+        data = this.receiver_data
+      } else if (this.type === 'engine_s_left' || this.type === 'engine_s_right') {
+        data = this.engine_s_data
       }
       if (this.type === 'engine_left' || this.type === 'engine_right') {
         addResumeEngine(data).then(res => {
           this.$Message.success('添加成功!')
-          this.engine_left_data = []
+          this.engine_data = []
           this.getData()
         })
       } else {
         addResume(data).then(res => {
           this.$Message.success('添加成功!')
-          this.engine_left_data = []
+          this.engine_data = []
           this.getData()
         })
       }
     },
-    adjustBelow (index) {
-      let len = this.engine_left_data.length
+    adjustBelow12(index) {
+      let len = this.engine_data.length
       ++index
       if (len === index) {
         return
       }
       for (; index < len;) {
-        this.engine_left_data[index].engineSMainCycle += (this.adjustNew - this.adjustOld)
+        this.engine_data[index].engineSMainCycle += (this.adjustNew - this.adjustOld)
         ++index
       }
     },
-    adjustBelow1 (index) {
-      let len = this.engine_left_data.length
+    adjustBelow13(index) {
+      let len = this.engine_data.length
       ++index
       if (len === index) {
         return
       }
       for (; index < len;) {
-        this.engine_left_data[index].engineSpMainCycle += (this.adjustNew - this.adjustOld)
+        this.engine_data[index].engineSpMainCycle += (this.adjustNew - this.adjustOld)
         ++index
       }
     },
-    formulaMode (type) {
+    formulaMode(type) {
       if (type === 'type1') {
         this.typeName = '第一种'
       } else if (type === 'type2') {
@@ -1681,6 +1017,114 @@ export default {
       } else {
         this.typeName = '第四种'
       }
+    },
+    selectionChange(selection) {
+      this.selectionC = selection
+    },
+    addSelection() {
+      let selection = this.selectionC
+
+      let engineStartTimes = 0
+      let engineSGroundFlight = ''
+      let engineSpGroundFlight = ''
+      let engineSFlight = ''
+      let engineSpFlight = ''
+      let engineSStateWork = ''
+      let engineYsStateWork = ''
+      let engineSpStateWork = ''
+      let engineSAllStateWork = ''
+      let engineSpAllStateWork = ''
+      let engineSMainCycle = 0
+      let engineSpMainCycle = 0
+
+      if (!isEmpty(selection) && selection.length > 0) {
+        let len_i = selection.length - 1
+        engineSStateWork = selection[len_i].engineSStateWork
+        engineYsStateWork = selection[len_i].engineYsStateWork
+        engineSpStateWork = selection[len_i].engineSpStateWork
+        engineSAllStateWork = selection[len_i].engineSAllStateWork
+        engineSpAllStateWork = selection[len_i].engineSpAllStateWork
+        for (let i = 0; i < selection.length; i++) {
+          engineStartTimes += selection[i].engineStartTimes
+          engineSGroundFlight = addTime(engineSGroundFlight, selection[i].engineSGroundFlight, 'hhmm')
+          engineSpGroundFlight = addTime(engineSpGroundFlight, selection[i].engineSpGroundFlight, 'hhmm')
+          engineSFlight = addTime(engineSFlight, selection[i].engineSFlight, 'hhmm')
+          engineSpFlight = addTime(engineSpFlight, selection[i].engineSpFlight, 'hhmm')
+          engineSMainCycle += selection[i].engineSMainCycle
+          engineSpMainCycle += selection[i].engineSpMainCycle
+        }
+      }
+      return {
+        selection: {key: 'selection', value: ''},
+        engine_date: {key: 'engine_date', value: '小结/总结'},
+        operation: {key: 'operation', value: ''},
+        sign: {key: 'sign', value: ''},
+        engine_start_times: {key: 'engineStartTimes', value: engineStartTimes},
+        engine_s_ground_flight: {key: 'engineSGroundFlight', value: engineSGroundFlight},
+        engine_sp_ground_flight: {key: 'engineSpGroundFlight', value: engineSpGroundFlight},
+        engine_s_flight: {key: 'engineSFlight', value: engineSFlight},
+        engine_sp_flight: {key: 'engineSpFlight', value: engineSpFlight},
+        engine_s_state_work: {key: 'engineSStateWork', value: engineSStateWork},
+        engine_ys_state_work: {key: 'engineYsStateWork', value: engineYsStateWork},
+        engine_sp_state_work: {key: 'engineSpStateWork', value: engineSpStateWork},
+        engine_s_all_state_work: {key: 'engineSAllStateWork', value: engineSAllStateWork},
+        engine_sp_all_state_work: {key: 'engineSpAllStateWork', value: engineSpAllStateWork},
+        engine_s_main_cycle: {key: 'engineSMainCycle', value: engineSMainCycle},
+        engine_sp_main_cycle: {key: 'engineSpMainCycle', value: engineSpMainCycle}
+      }
+    },
+
+    addReceiver() {
+      let selection = this.selectionC
+
+      let receiverStartTimes = 0
+      let receiverSGroundFlight = ''
+      let receiverSpGroundFlight = ''
+      let receiverSFlight = ''
+      let receiverSpFlight = ''
+      let receiverSStateWork = ''
+      let receiverYsStateWork = ''
+      let receiverSpStateWork = ''
+      let receiverSAllStateWork = ''
+      let receiverSpAllStateWork = ''
+
+      if (!isEmpty(selection) && selection.length > 0) {
+        let len_i = selection.length - 1
+        receiverSStateWork = selection[len_i].receiverSStateWork
+        receiverYsStateWork = selection[len_i].receiverYsStateWork
+        receiverSpStateWork = selection[len_i].receiverSpStateWork
+        receiverSAllStateWork = selection[len_i].receiverSAllStateWork
+        receiverSpAllStateWork = selection[len_i].receiverSpAllStateWork
+        for (let i = 0; i < selection.length; i++) {
+          receiverStartTimes += selection[i].receiverStartTimes
+          receiverSGroundFlight = addTime(receiverSGroundFlight, selection[i].receiverSGroundFlight, 'hhmm')
+          receiverSpGroundFlight = addTime(receiverSpGroundFlight, selection[i].receiverSpGroundFlight, 'hhmm')
+          receiverSFlight = addTime(receiverSFlight, selection[i].receiverSFlight, 'hhmm')
+          receiverSpFlight = addTime(receiverSpFlight, selection[i].receiverSpFlight, 'hhmm')
+        }
+      }
+      return {
+        selection: {key: 'selection', value: ''},
+        receiver_date: {key: 'receiver_date', value: '小结/总结'},
+        operation: {key: 'operation', value: ''},
+        sign: {key: 'sign', value: ''},
+        receiver_start_times: {key: 'receiverStartTimes', value: receiverStartTimes},
+        receiver_s_ground_flight: {key: 'receiverSGroundFlight', value: receiverSGroundFlight},
+        receiver_sp_ground_flight: {key: 'receiverSpGroundFlight', value: receiverSpGroundFlight},
+        receiver_s_flight: {key: 'receiverSFlight', value: receiverSFlight},
+        receiver_sp_flight: {key: 'receiverSpFlight', value: receiverSpFlight},
+        receiver_s_state_work: {key: 'receiverSStateWork', value: receiverSStateWork},
+        receiver_ys_state_work: {key: 'receiverYsStateWork', value: receiverYsStateWork},
+        receiver_sp_state_work: {key: 'receiverSpStateWork', value: receiverSpStateWork},
+        receiver_s_all_state_work: {key: 'receiverSAllStateWork', value: receiverSAllStateWork},
+        receiver_sp_all_state_work: {key: 'receiverSpAllStateWork', value: receiverSpAllStateWork}
+      }
+    },
+    engineSummary({columns, data}) {
+      return this.addSelection();
+    },
+    receiverSummary({columns, data}) {
+      return this.addReceiver();
     }
   }
 }

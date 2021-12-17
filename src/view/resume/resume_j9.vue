@@ -50,7 +50,7 @@ export default {
                         size: 'small'
                       },
                       on: {
-                        input: (val) => {
+                        'on-change': (val) => {
                           this.resume_j9_data[params.index].nineDate = val
                         }
                       },

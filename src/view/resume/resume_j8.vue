@@ -35,7 +35,7 @@ export default {
                 size: 'small'
               },
               on: {
-                input: (val) => {
+                'on-change': (val) => {
                   this.resume_j8_data[params.index].eightDate = val
                 }
               },
@@ -314,7 +314,7 @@ export default {
                 })
               }
             },
-            {
+              {
               title: '共计时：分',
               key: 'total_total',
               align: 'center',

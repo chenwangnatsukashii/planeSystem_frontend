@@ -23,7 +23,21 @@
       <Button style="float: right; margin-left: 10px;" type="warning" shape="circle" icon="ios-refresh" @click="clearSearch">重置</Button>
       <Button style="float: right;" type="primary" shape="circle" icon="ios-search" @click="searchPlane">查询</Button>
     </div>
-    <Table stripe border :columns="base_columns" :data="base_data"></Table>
+    <Table stripe border :columns="base_columns" :data="base_data">
+      <template slot-scope="{row, index}" slot="action">
+        <Dropdown style="margin-left: 20px" v-show="row.warningInfo.length>0">
+          <Button type="warning">
+            请查看
+            <Icon type="ios-arrow-down"></Icon>
+          </Button>
+          <DropdownMenu slot="list">
+            <DropdownItem v-for="item in row.warningInfo" :key=item>{{ item }}</DropdownItem>
+          </DropdownMenu>
+        </Dropdown>
+        <Badge :count="row.warningInfo.length" v-show="row.warningInfo.length>0">
+        </Badge>
+      </template>
+    </Table>
     <Modal
       v-model="newDataShow"
       title="新增飞机基本信息"
@@ -53,6 +67,12 @@
     </Modal>
   </div>
 </template>
+<style scoped>
+.ivu-badge{
+  margin-bottom: 10px;
+  margin-left: -5px;
+}
+</style>
 <script>
 
 import {addPlane} from "@/http/plane_system/base";
@@ -123,23 +143,29 @@ export default {
         },
         {
           title: '派工号',
+          align: 'center',
           key: 'workNumber'
         },
         {
           title: '机型',
+          align: 'center',
           key: 'planeType'
         },
         {
           title: '部队',
+          align: 'center',
           key: 'unitNumber'
         },
         {
           title: '飞机号',
+          align: 'center',
           key: 'planeNum'
         },
         {
           title: '提醒信息',
-          key: 'promptingMessage'
+          align: 'center',
+          key: 'promptingMessage',
+          slot: 'action'
         }
       ],
       base_data: []
@@ -198,7 +224,7 @@ export default {
       })
     },
     operation(name) {
-      if (this.currentChoose === ''){
+      if (this.currentChoose === '') {
         this.$Message.warning('请选择飞机')
         return
       }
