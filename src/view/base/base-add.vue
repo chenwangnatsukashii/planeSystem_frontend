@@ -407,11 +407,22 @@
     </FormItem>
   </Form>
 </template>
+<style>
+input[type=text]{
+  color: red;
+}
+.ivu-input-number-input{
+  color: red;
+}
+input[readonly]{
+  color: black;
+}
+</style>
 <script>
-import {addPlane, updatePlane} from "@/http/plane_system/base"
+import {addPlane, updatePlane} from '@/http/plane_system/base'
 
 export default {
-  data() {
+  data () {
     let t = this
     return {
       formValidate: {
@@ -609,7 +620,7 @@ export default {
           title: ' ',
           key: 'left_right',
           width: 70,
-          align: 'center',
+          align: 'center'
         },
         {
           title: '号码',
@@ -623,13 +634,13 @@ export default {
               },
               on: {
                 input: (val) => {
-                  if (params.index === 0){
+                  if (params.index === 0) {
                     t.formValidate.engineLeftNum = val
-                  }else{
+                  } else {
                     t.formValidate.engineRightNum = val
                   }
                 }
-              },
+              }
             })
           }
         },
@@ -646,13 +657,13 @@ export default {
               },
               on: {
                 input: (val) => {
-                  if (params.index === 0){
+                  if (params.index === 0) {
                     t.formValidate.engineLeftRemainingTime = val
-                  }else{
+                  } else {
                     t.formValidate.engineRightRemainingTime = val
                   }
                 }
-              },
+              }
             })
           }
         },
@@ -669,13 +680,13 @@ export default {
               },
               on: {
                 input: (val) => {
-                  if (params.index === 0){
+                  if (params.index === 0) {
                     t.formValidate.engineLeftTotalServiceLife = val
-                  }else{
+                  } else {
                     t.formValidate.engineRightTotalServiceLife = val
                   }
                 }
-              },
+              }
             })
           }
         },
@@ -691,13 +702,13 @@ export default {
               },
               on: {
                 input: (val) => {
-                  if (params.index === 0){
+                  if (params.index === 0) {
                     t.formValidate.engineLeftSpecifiedLife = val
-                  }else{
+                  } else {
                     t.formValidate.engineRightSpecifiedLife = val
                   }
                 }
-              },
+              }
             })
           }
         },
@@ -714,13 +725,13 @@ export default {
               },
               on: {
                 input: (val) => {
-                  if (params.index === 0){
+                  if (params.index === 0) {
                     t.formValidate.engineLeftResidualLife = val
-                  }else{
+                  } else {
                     t.formValidate.engineRightResidualLife = val
                   }
                 }
-              },
+              }
             })
           }
         },
@@ -737,13 +748,13 @@ export default {
               },
               on: {
                 input: (val) => {
-                  if (params.index === 0){
+                  if (params.index === 0) {
                     t.formValidate.engineLeftSpStateResidualLife = val
-                  }else{
+                  } else {
                     t.formValidate.engineRightSpStateResidualLife = val
                   }
                 }
-              },
+              }
             })
           }
         },
@@ -760,13 +771,13 @@ export default {
               },
               on: {
                 input: (val) => {
-                  if (params.index === 0){
+                  if (params.index === 0) {
                     t.formValidate.engineLeftSStateResidualLife = val
-                  }else{
+                  } else {
                     t.formValidate.engineRightSStateResidualLife = val
                   }
                 }
-              },
+              }
             })
           }
         },
@@ -783,13 +794,13 @@ export default {
               },
               on: {
                 input: (val) => {
-                  if (params.index === 0){
+                  if (params.index === 0) {
                     t.formValidate.engineLeftStartingRemainingLife = val
-                  }else{
+                  } else {
                     t.formValidate.engineRightStartingRemainingLife = val
                   }
                 }
-              },
+              }
             })
           }
         },
@@ -806,13 +817,13 @@ export default {
               },
               on: {
                 input: (val) => {
-                  if (params.index === 0){
+                  if (params.index === 0) {
                     t.formValidate.engineLeftSpMajorCycles = val
-                  }else{
+                  } else {
                     t.formValidate.engineRightSpMajorCycles = val
                   }
                 }
-              },
+              }
             })
           }
         },
@@ -829,13 +840,13 @@ export default {
               },
               on: {
                 input: (val) => {
-                  if (params.index === 0){
+                  if (params.index === 0) {
                     t.formValidate.engineLeftSMajorCycles = val
-                  }else{
+                  } else {
                     t.formValidate.engineRightSMajorCycles = val
                   }
                 }
-              },
+              }
             })
           }
         },
@@ -851,13 +862,13 @@ export default {
               },
               on: {
                 input: (val) => {
-                  if (params.index === 0){
+                  if (params.index === 0) {
                     t.formValidate.engineLeftRepairedTimes = val
-                  }else{
+                  } else {
                     t.formValidate.engineRightRepairedTimes = val
                   }
                 }
-              },
+              }
             })
           }
         },
@@ -873,13 +884,13 @@ export default {
               },
               on: {
                 input: (val) => {
-                  if (params.index === 0){
+                  if (params.index === 0) {
                     t.formValidate.engineLeftRepairMakeFactory = val
-                  }else{
+                  } else {
                     t.formValidate.engineRightRepairMakeFactory = val
                   }
                 }
-              },
+              }
             })
           }
         },
@@ -896,13 +907,13 @@ export default {
               },
               on: {
                 input: (val) => {
-                  if (params.index === 0){
+                  if (params.index === 0) {
                     t.formValidate.engineLeftLastDeliveryDate = val
-                  }else{
+                  } else {
                     t.formValidate.engineRightLastDeliveryDate = val
                   }
                 }
-              },
+              }
             })
           }
         }
@@ -939,13 +950,13 @@ export default {
               },
               on: {
                 input: (val) => {
-                  if (params.index === 0){
+                  if (params.index === 0) {
                     t.formValidate.engineLeftNine = val
-                  }else{
+                  } else {
                     t.formValidate.engineRightNine = val
                   }
                 }
-              },
+              }
             })
           }
         },
@@ -955,7 +966,7 @@ export default {
         },
         {
           key: 'engine_left_flaw_detection',
-          align: 'center',
+          align: 'center'
         },
         {
           key: 'engine_left_flaw_detection_num',
@@ -971,7 +982,7 @@ export default {
                 input: (val) => {
                   t.formValidate.engineLeftFlawDetection = val
                 }
-              },
+              }
             })
           }
         },
@@ -993,7 +1004,7 @@ export default {
                 input: (val) => {
                   t.formValidate.engineLeftNextInspection = val
                 }
-              },
+              }
             })
           }
         }
@@ -1003,7 +1014,7 @@ export default {
           last_time: '发动机九级篦齿盘涡流探最近一次间',
           left_right: '左',
           engine_left_flaw_detection: '探伤后飞行左发',
-          engine_left_next_inspection: '距下次探伤左',
+          engine_left_next_inspection: '距下次探伤左'
         },
         {
           left_right: '右'
@@ -1033,13 +1044,13 @@ export default {
               },
               on: {
                 input: (val) => {
-                  if (params.index === 0){
+                  if (params.index === 0) {
                     t.formValidate.engineLeftOilNum = val
-                  }else{
+                  } else {
                     t.formValidate.engineRightOilNum = val
                   }
                 }
-              },
+              }
             })
           }
         },
@@ -1060,13 +1071,13 @@ export default {
               },
               on: {
                 input: (val) => {
-                  if (params.index === 0){
+                  if (params.index === 0) {
                     t.formValidate.engineLeftOilSealDate = val
-                  }else{
+                  } else {
                     t.formValidate.engineRightOilSealDate = val
                   }
                 }
-              },
+              }
             })
           }
         },
@@ -1087,19 +1098,19 @@ export default {
               },
               on: {
                 input: (val) => {
-                  if (params.index === 0){
+                  if (params.index === 0) {
                     t.formValidate.engineLeftOilSealDeadline = val
-                  }else{
+                  } else {
                     t.formValidate.engineRightOilSealDeadline = val
                   }
                 }
-              },
+              }
             })
           }
         },
         {
           key: 'engine_right_flaw_detection',
-          align: 'center',
+          align: 'center'
         },
         {
           key: 'engine_right_flaw_detection_num',
@@ -1115,7 +1126,7 @@ export default {
                 input: (val) => {
                   t.formValidate.engineRightFlawDetection = val
                 }
-              },
+              }
             })
           }
         },
@@ -1137,7 +1148,7 @@ export default {
                 input: (val) => {
                   t.formValidate.engineRightNextInspection = val
                 }
-              },
+              }
             })
           }
         }
@@ -1149,7 +1160,7 @@ export default {
           oil_seal: '油封日期',
           oil_seal_deadline: '油封期限',
           engine_right_flaw_detection: '探伤后飞行右发',
-          engine_right_next_inspection: '距下次探伤右',
+          engine_right_next_inspection: '距下次探伤右'
         },
         {
           left_right: '右',
@@ -1163,7 +1174,7 @@ export default {
           title: ' ',
           key: 'left_right',
           width: 70,
-          align: 'center',
+          align: 'center'
         },
         {
           title: '号码',
@@ -1177,13 +1188,13 @@ export default {
               },
               on: {
                 input: (val) => {
-                  if (params.index === 0){
+                  if (params.index === 0) {
                     t.formValidate.receiverLeftNum = val
-                  }else{
+                  } else {
                     t.formValidate.receiverRightNum = val
                   }
                 }
-              },
+              }
             })
           }
         },
@@ -1200,13 +1211,13 @@ export default {
               },
               on: {
                 input: (val) => {
-                  if (params.index === 0){
+                  if (params.index === 0) {
                     t.formValidate.receiverLeftRemainingTime = val
-                  }else{
+                  } else {
                     t.formValidate.receiverRightRemainingTime = val
                   }
                 }
-              },
+              }
             })
           }
         },
@@ -1223,13 +1234,13 @@ export default {
               },
               on: {
                 input: (val) => {
-                  if (params.index === 0){
+                  if (params.index === 0) {
                     t.formValidate.receiverLeftTotalServiceLife = val
-                  }else{
+                  } else {
                     t.formValidate.receiverRightTotalServiceLife = val
                   }
                 }
-              },
+              }
             })
           }
         },
@@ -1245,13 +1256,13 @@ export default {
               },
               on: {
                 input: (val) => {
-                  if (params.index === 0){
+                  if (params.index === 0) {
                     t.formValidate.receiverLeftSpecifiedLife = val
-                  }else{
+                  } else {
                     t.formValidate.receiverRightSpecifiedLife = val
                   }
                 }
-              },
+              }
             })
           }
         },
@@ -1268,13 +1279,13 @@ export default {
               },
               on: {
                 input: (val) => {
-                  if (params.index === 0){
+                  if (params.index === 0) {
                     t.formValidate.receiverLeftResidualLife = val
-                  }else{
+                  } else {
                     t.formValidate.receiverRightResidualLife = val
                   }
                 }
-              },
+              }
             })
           }
         },
@@ -1291,13 +1302,13 @@ export default {
               },
               on: {
                 input: (val) => {
-                  if (params.index === 0){
+                  if (params.index === 0) {
                     t.formValidate.receiverLeftSpStateResidualLife = val
-                  }else{
+                  } else {
                     t.formValidate.receiverRightSpStateResidualLife = val
                   }
                 }
-              },
+              }
             })
           }
         },
@@ -1314,13 +1325,13 @@ export default {
               },
               on: {
                 input: (val) => {
-                  if (params.index === 0){
+                  if (params.index === 0) {
                     t.formValidate.receiverLeftStateResidualLife = val
-                  }else{
+                  } else {
                     t.formValidate.receiverRightStateResidualLife = val
                   }
                 }
-              },
+              }
             })
           }
         },
@@ -1337,13 +1348,13 @@ export default {
               },
               on: {
                 input: (val) => {
-                  if (params.index === 0){
+                  if (params.index === 0) {
                     t.formValidate.receiverLeftStartingRemainingLife = val
-                  }else{
+                  } else {
                     t.formValidate.receiverRightStartingRemainingLife = val
                   }
                 }
-              },
+              }
             })
           }
         },
@@ -1359,13 +1370,13 @@ export default {
               },
               on: {
                 input: (val) => {
-                  if (params.index === 0){
+                  if (params.index === 0) {
                     t.formValidate.receiverLeftRepairedTimes = val
-                  }else{
+                  } else {
                     t.formValidate.receiverRightRepairedTimes = val
                   }
                 }
-              },
+              }
             })
           }
         },
@@ -1381,13 +1392,13 @@ export default {
               },
               on: {
                 input: (val) => {
-                  if (params.index === 0){
+                  if (params.index === 0) {
                     t.formValidate.receiverLeftOverhaulFactory = val
-                  }else{
+                  } else {
                     t.formValidate.receiverRightOverhaulFactory = val
                   }
                 }
-              },
+              }
             })
           }
         },
@@ -1404,13 +1415,13 @@ export default {
               },
               on: {
                 input: (val) => {
-                  if (params.index === 0){
+                  if (params.index === 0) {
                     t.formValidate.receiverLeftLastDeliveryDate = val
-                  }else{
+                  } else {
                     t.formValidate.receiverRightLastDeliveryDate = val
                   }
                 }
-              },
+              }
             })
           }
         },
@@ -1427,13 +1438,13 @@ export default {
               },
               on: {
                 input: (val) => {
-                  if (params.index === 0){
+                  if (params.index === 0) {
                     t.formValidate.receiverLeftManufactureDate = val
-                  }else{
+                  } else {
                     t.formValidate.receiverRightManufactureDate = val
                   }
                 }
-              },
+              }
             })
           }
         }
@@ -1492,7 +1503,7 @@ export default {
           title: ' ',
           key: 'left_right',
           width: 70,
-          align: 'center',
+          align: 'center'
         },
         {
           title: '号码',
@@ -1506,13 +1517,13 @@ export default {
               },
               on: {
                 input: (val) => {
-                  if (params.index === 0){
+                  if (params.index === 0) {
                     t.formValidate.starterLeftNum = val
-                  }else{
+                  } else {
                     t.formValidate.starterRightNum = val
                   }
                 }
-              },
+              }
             })
           }
         },
@@ -1529,13 +1540,13 @@ export default {
               },
               on: {
                 input: (val) => {
-                  if (params.index === 0){
+                  if (params.index === 0) {
                     t.formValidate.starterLeftRemainingTime = val
-                  }else{
+                  } else {
                     t.formValidate.starterRightRemainingTime = val
                   }
                 }
-              },
+              }
             })
           }
         },
@@ -1552,13 +1563,13 @@ export default {
               },
               on: {
                 input: (val) => {
-                  if (params.index === 0){
+                  if (params.index === 0) {
                     t.formValidate.starterLeftTotalServiceLife = val
-                  }else{
+                  } else {
                     t.formValidate.starterRightTotalServiceLife = val
                   }
                 }
-              },
+              }
             })
           }
         },
@@ -1574,13 +1585,13 @@ export default {
               },
               on: {
                 input: (val) => {
-                  if (params.index === 0){
+                  if (params.index === 0) {
                     t.formValidate.starterLeftSpecifiedLife = val
-                  }else{
+                  } else {
                     t.formValidate.starterRightSpecifiedLife = val
                   }
                 }
-              },
+              }
             })
           }
         },
@@ -1597,13 +1608,13 @@ export default {
               },
               on: {
                 input: (val) => {
-                  if (params.index === 0){
+                  if (params.index === 0) {
                     t.formValidate.starterLeftResidualLife = val
-                  }else{
+                  } else {
                     t.formValidate.starterRightResidualLife = val
                   }
                 }
-              },
+              }
             })
           }
         },
@@ -1620,13 +1631,13 @@ export default {
               },
               on: {
                 input: (val) => {
-                  if (params.index === 0){
+                  if (params.index === 0) {
                     t.formValidate.starterLeftRenovations = val
-                  }else{
+                  } else {
                     t.formValidate.starterRightRenovations = val
                   }
                 }
-              },
+              }
             })
           }
         },
@@ -1642,13 +1653,13 @@ export default {
               },
               on: {
                 input: (val) => {
-                  if (params.index === 0){
+                  if (params.index === 0) {
                     t.formValidate.starterLeftOverhaulFactory = val
-                  }else{
+                  } else {
                     t.formValidate.starterRightOverhaulFactory = val
                   }
                 }
-              },
+              }
             })
           }
         },
@@ -1665,13 +1676,13 @@ export default {
               },
               on: {
                 input: (val) => {
-                  if (params.index === 0){
+                  if (params.index === 0) {
                     t.formValidate.starterLeftLastDeliveryDate = val
-                  }else{
+                  } else {
                     t.formValidate.starterRightLastDeliveryDate = val
                   }
                 }
-              },
+              }
             })
           }
         },
@@ -1688,13 +1699,13 @@ export default {
               },
               on: {
                 input: (val) => {
-                  if (params.index === 0){
+                  if (params.index === 0) {
                     t.formValidate.starterLeftManufactureDate = val
-                  }else{
+                  } else {
                     t.formValidate.starterRightManufactureDate = val
                   }
                 }
-              },
+              }
             })
           }
         }
@@ -1756,7 +1767,7 @@ export default {
           title: ' ',
           key: 'left_right',
           width: 70,
-          align: 'center',
+          align: 'center'
         },
         {
           title: '号码',
@@ -1770,13 +1781,13 @@ export default {
               },
               on: {
                 input: (val) => {
-                  if (params.index === 0){
+                  if (params.index === 0) {
                     t.formValidate.regulatorLeftNum = val
-                  }else{
+                  } else {
                     t.formValidate.regulatorRightNum = val
                   }
                 }
-              },
+              }
             })
           }
         },
@@ -1792,13 +1803,13 @@ export default {
               },
               on: {
                 input: (val) => {
-                  if (params.index === 0){
+                  if (params.index === 0) {
                     t.formValidate.regulatorLeftModel = val
-                  }else{
+                  } else {
                     t.formValidate.regulatorRightModel = val
                   }
                 }
-              },
+              }
             })
           }
         },
@@ -1815,13 +1826,13 @@ export default {
               },
               on: {
                 input: (val) => {
-                  if (params.index === 0){
+                  if (params.index === 0) {
                     t.formValidate.regulatorLeftRemainingTime = val
-                  }else{
+                  } else {
                     t.formValidate.regulatorRightRemainingTime = val
                   }
                 }
-              },
+              }
             })
           }
         },
@@ -1838,13 +1849,13 @@ export default {
               },
               on: {
                 input: (val) => {
-                  if (params.index === 0){
+                  if (params.index === 0) {
                     t.formValidate.regulatorLeftResidualLife = val
-                  }else{
+                  } else {
                     t.formValidate.regulatorRightResidualLife = val
                   }
                 }
-              },
+              }
             })
           }
         }
@@ -1863,7 +1874,7 @@ export default {
           title: ' ',
           key: 'left_right',
           width: 70,
-          align: 'center',
+          align: 'center'
         },
         {
           title: '号码',
@@ -1877,13 +1888,13 @@ export default {
               },
               on: {
                 input: (val) => {
-                  if (params.index === 0){
+                  if (params.index === 0) {
                     t.formValidate.engineLeftNum = val
-                  }else{
+                  } else {
                     t.formValidate.engineRightNum = val
                   }
                 }
-              },
+              }
             })
           }
         },
@@ -1900,13 +1911,13 @@ export default {
               },
               on: {
                 input: (val) => {
-                  if (params.index === 0){
+                  if (params.index === 0) {
                     t.formValidate.engineLeftTotalWorkHours = val
-                  }else{
+                  } else {
                     t.formValidate.engineRightTotalWorkHours = val
                   }
                 }
-              },
+              }
             })
           }
         },
@@ -1923,13 +1934,13 @@ export default {
               },
               on: {
                 input: (val) => {
-                  if (params.index === 0){
+                  if (params.index === 0) {
                     t.formValidate.engineLeftLastRepairTime = val
-                  }else{
+                  } else {
                     t.formValidate.engineRightLastRepairTime = val
                   }
                 }
-              },
+              }
             })
           }
         },
@@ -1947,13 +1958,13 @@ export default {
               },
               on: {
                 input: (val) => {
-                  if (params.index === 0){
+                  if (params.index === 0) {
                     t.formValidate.engineLeftExpirationDate = val
-                  }else{
+                  } else {
                     t.formValidate.engineRightExpirationDate = val
                   }
                 }
-              },
+              }
             })
           }
         },
@@ -1970,13 +1981,13 @@ export default {
               },
               on: {
                 input: (val) => {
-                  if (params.index === 0){
+                  if (params.index === 0) {
                     t.formValidate.engineLeftOperationalHours = val
-                  }else{
+                  } else {
                     t.formValidate.engineRightOperationalHours = val
                   }
                 }
-              },
+              }
             })
           }
         },
@@ -1993,13 +2004,13 @@ export default {
               },
               on: {
                 input: (val) => {
-                  if (params.index === 0){
+                  if (params.index === 0) {
                     t.formValidate.engineLeftMidUpHours = val
-                  }else{
+                  } else {
                     t.formValidate.engineRightMidUpHours = val
                   }
                 }
-              },
+              }
             })
           }
         },
@@ -2016,13 +2027,13 @@ export default {
               },
               on: {
                 input: (val) => {
-                  if (params.index === 0){
+                  if (params.index === 0) {
                     t.formValidate.engineLeftMidUpRestHours = val
-                  }else{
+                  } else {
                     t.formValidate.engineRightMidUpRestHours = val
                   }
                 }
-              },
+              }
             })
           }
         },
@@ -2039,13 +2050,13 @@ export default {
               },
               on: {
                 input: (val) => {
-                  if (params.index === 0){
+                  if (params.index === 0) {
                     t.formValidate.engineLeftResidualLife = val
-                  }else{
+                  } else {
                     t.formValidate.engineRightResidualLife = val
                   }
                 }
-              },
+              }
             })
           }
         },
@@ -2061,13 +2072,13 @@ export default {
               },
               on: {
                 input: (val) => {
-                  if (params.index === 0){
+                  if (params.index === 0) {
                     t.formValidate.engineLeftRepairedTimes = val
-                  }else{
+                  } else {
                     t.formValidate.engineRightRepairedTimes = val
                   }
                 }
-              },
+              }
             })
           }
         },
@@ -2083,13 +2094,13 @@ export default {
               },
               on: {
                 input: (val) => {
-                  if (params.index === 0){
+                  if (params.index === 0) {
                     t.formValidate.engineLeftOverhaulFactory = val
-                  }else{
+                  } else {
                     t.formValidate.engineRightOverhaulFactory = val
                   }
                 }
-              },
+              }
             })
           }
         },
@@ -2106,13 +2117,13 @@ export default {
               },
               on: {
                 input: (val) => {
-                  if (params.index === 0){
+                  if (params.index === 0) {
                     t.formValidate.engineLeftLastDeliveryDate = val
-                  }else{
+                  } else {
                     t.formValidate.engineRightLastDeliveryDate = val
                   }
                 }
-              },
+              }
             })
           }
         },
@@ -2128,13 +2139,13 @@ export default {
               },
               on: {
                 input: (val) => {
-                  if (params.index === 0){
+                  if (params.index === 0) {
                     t.formValidate.engineLeftRepairMakeFactory = val
-                  }else{
+                  } else {
                     t.formValidate.engineRightRepairMakeFactory = val
                   }
                 }
-              },
+              }
             })
           }
         },
@@ -2151,13 +2162,13 @@ export default {
               },
               on: {
                 input: (val) => {
-                  if (params.index === 0){
+                  if (params.index === 0) {
                     t.formValidate.engineLeftManufacturingData = val
-                  }else{
+                  } else {
                     t.formValidate.engineRightManufacturingData = val
                   }
                 }
-              },
+              }
             })
           }
         }
@@ -2189,13 +2200,13 @@ export default {
               },
               on: {
                 input: (val) => {
-                  if (params.index === 0){
+                  if (params.index === 0) {
                     t.formValidate.engineLeftOilNum = val
-                  }else{
+                  } else {
                     t.formValidate.engineRightOilNum = val
                   }
                 }
-              },
+              }
             })
           }
         }
@@ -2214,7 +2225,7 @@ export default {
           title: ' ',
           key: 'left_right',
           width: 70,
-          align: 'center',
+          align: 'center'
         },
         {
           title: '号码',
@@ -2228,13 +2239,13 @@ export default {
               },
               on: {
                 input: (val) => {
-                  if (params.index === 0){
+                  if (params.index === 0) {
                     t.formValidate.receiverLeftNum = val
-                  }else{
+                  } else {
                     t.formValidate.receiverRightNum = val
                   }
                 }
-              },
+              }
             })
           }
         },
@@ -2251,13 +2262,13 @@ export default {
               },
               on: {
                 input: (val) => {
-                  if (params.index === 0){
+                  if (params.index === 0) {
                     t.formValidate.receiverLeftTotalHours = val
-                  }else{
+                  } else {
                     t.formValidate.receiverRightTotalHours = val
                   }
                 }
-              },
+              }
             })
           }
         },
@@ -2274,13 +2285,13 @@ export default {
               },
               on: {
                 input: (val) => {
-                  if (params.index === 0){
+                  if (params.index === 0) {
                     t.formValidate.receiverLeftLastRepairTime = val
-                  }else{
+                  } else {
                     t.formValidate.receiverRightLastRepairTime = val
                   }
                 }
-              },
+              }
             })
           }
         },
@@ -2297,13 +2308,13 @@ export default {
               },
               on: {
                 input: (val) => {
-                  if (params.index === 0){
+                  if (params.index === 0) {
                     t.formValidate.receiverLeftRemainingTime = val
-                  }else{
+                  } else {
                     t.formValidate.receiverRightRemainingTime = val
                   }
                 }
-              },
+              }
             })
           }
         },
@@ -2319,13 +2330,13 @@ export default {
               },
               on: {
                 input: (val) => {
-                  if (params.index === 0){
+                  if (params.index === 0) {
                     t.formValidate.receiverLeftExpirationDate = val
-                  }else{
+                  } else {
                     t.formValidate.receiverRightExpirationDate = val
                   }
                 }
-              },
+              }
             })
           }
         },
@@ -2341,13 +2352,13 @@ export default {
               },
               on: {
                 input: (val) => {
-                  if (params.index === 0){
+                  if (params.index === 0) {
                     t.formValidate.receiverLeftRepairedTimes = val
-                  }else{
+                  } else {
                     t.formValidate.receiverRightRepairedTimes = val
                   }
                 }
-              },
+              }
             })
           }
         },
@@ -2363,13 +2374,13 @@ export default {
               },
               on: {
                 input: (val) => {
-                  if (params.index === 0){
+                  if (params.index === 0) {
                     t.formValidate.receiverLeftManufacturingFactory = val
-                  }else{
+                  } else {
                     t.formValidate.receiverRightManufacturingFactory = val
                   }
                 }
-              },
+              }
             })
           }
         },
@@ -2385,13 +2396,13 @@ export default {
               },
               on: {
                 input: (val) => {
-                  if (params.index === 0){
+                  if (params.index === 0) {
                     t.formValidate.receiverLeftManufacturingDate = val
-                  }else{
+                  } else {
                     t.formValidate.receiverRightManufacturingDate = val
                   }
                 }
-              },
+              }
             })
           }
         },
@@ -2407,13 +2418,13 @@ export default {
               },
               on: {
                 input: (val) => {
-                  if (params.index === 0){
+                  if (params.index === 0) {
                     t.formValidate.receiverLeftOverhaulFactory = val
-                  }else{
+                  } else {
                     t.formValidate.receiverRightOverhaulFactory = val
                   }
                 }
-              },
+              }
             })
           }
         },
@@ -2429,13 +2440,13 @@ export default {
               },
               on: {
                 input: (val) => {
-                  if (params.index === 0){
+                  if (params.index === 0) {
                     t.formValidate.receiverLeftLastDeliveryDate = val
-                  }else{
+                  } else {
                     t.formValidate.receiverRightLastDeliveryDate = val
                   }
                 }
-              },
+              }
             })
           }
         }
@@ -2454,7 +2465,7 @@ export default {
           title: ' ',
           key: 'left_right',
           width: 70,
-          align: 'center',
+          align: 'center'
         },
         {
           title: '号码',
@@ -2468,13 +2479,13 @@ export default {
               },
               on: {
                 input: (val) => {
-                  if (params.index === 0){
+                  if (params.index === 0) {
                     t.formValidate.starterLeftNum = val
-                  }else{
+                  } else {
                     t.formValidate.starterRightNum = val
                   }
                 }
-              },
+              }
             })
           }
         },
@@ -2491,13 +2502,13 @@ export default {
               },
               on: {
                 input: (val) => {
-                  if (params.index === 0){
+                  if (params.index === 0) {
                     t.formValidate.starterLeftTotalServiceLife = val
-                  }else{
+                  } else {
                     t.formValidate.starterRightTotalServiceLife = val
                   }
                 }
-              },
+              }
             })
           }
         },
@@ -2514,13 +2525,13 @@ export default {
               },
               on: {
                 input: (val) => {
-                  if (params.index === 0){
+                  if (params.index === 0) {
                     t.formValidate.starterLeftSpecifiedLife = val
-                  }else{
+                  } else {
                     t.formValidate.starterRightSpecifiedLife = val
                   }
                 }
-              },
+              }
             })
           }
         },
@@ -2537,13 +2548,13 @@ export default {
               },
               on: {
                 input: (val) => {
-                  if (params.index === 0){
+                  if (params.index === 0) {
                     t.formValidate.starterLeftResidualLife = val
-                  }else{
+                  } else {
                     t.formValidate.starterRightResidualLife = val
                   }
                 }
-              },
+              }
             })
           }
         },
@@ -2559,13 +2570,13 @@ export default {
               },
               on: {
                 input: (val) => {
-                  if (params.index === 0){
+                  if (params.index === 0) {
                     t.formValidate.starterLeftExpirationDate = val
-                  }else{
+                  } else {
                     t.formValidate.starterRightExpirationDate = val
                   }
                 }
-              },
+              }
             })
           }
         },
@@ -2581,13 +2592,13 @@ export default {
               },
               on: {
                 input: (val) => {
-                  if (params.index === 0){
+                  if (params.index === 0) {
                     t.formValidate.starterLeftRepairedTimes = val
-                  }else{
+                  } else {
                     t.formValidate.starterRightRepairedTimes = val
                   }
                 }
-              },
+              }
             })
           }
         },
@@ -2603,13 +2614,13 @@ export default {
               },
               on: {
                 input: (val) => {
-                  if (params.index === 0){
+                  if (params.index === 0) {
                     t.formValidate.starterLeftManufacturingFactory = val
-                  }else{
+                  } else {
                     t.formValidate.starterRightManufacturingFactory = val
                   }
                 }
-              },
+              }
             })
           }
         },
@@ -2625,13 +2636,13 @@ export default {
               },
               on: {
                 input: (val) => {
-                  if (params.index === 0){
+                  if (params.index === 0) {
                     t.formValidate.starterLeftManufactureDate = val
-                  }else{
+                  } else {
                     t.formValidate.starterRightManufactureDate = val
                   }
                 }
-              },
+              }
             })
           }
         },
@@ -2647,13 +2658,13 @@ export default {
               },
               on: {
                 input: (val) => {
-                  if (params.index === 0){
+                  if (params.index === 0) {
                     t.formValidate.starterLeftOverhaulFactory = val
-                  }else{
+                  } else {
                     t.formValidate.starterRightOverhaulFactory = val
                   }
                 }
-              },
+              }
             })
           }
         },
@@ -2669,13 +2680,13 @@ export default {
               },
               on: {
                 input: (val) => {
-                  if (params.index === 0){
+                  if (params.index === 0) {
                     t.formValidate.starterLeftLastDeliveryDate = val
-                  }else{
+                  } else {
                     t.formValidate.starterRightLastDeliveryDate = val
                   }
                 }
-              },
+              }
             })
           }
         }
@@ -2694,7 +2705,7 @@ export default {
           title: ' ',
           key: 'left_right',
           width: 70,
-          align: 'center',
+          align: 'center'
         },
         {
           title: '号码',
@@ -2708,13 +2719,13 @@ export default {
               },
               on: {
                 input: (val) => {
-                  if (params.index === 0){
+                  if (params.index === 0) {
                     t.formValidate.regulatorLeftNum = val
-                  }else{
+                  } else {
                     t.formValidate.regulatorRightNum = val
                   }
                 }
-              },
+              }
             })
           }
         },
@@ -2730,13 +2741,13 @@ export default {
               },
               on: {
                 input: (val) => {
-                  if (params.index === 0){
+                  if (params.index === 0) {
                     t.formValidate.regulatorLeftModel = val
-                  }else{
+                  } else {
                     t.formValidate.regulatorRightModel = val
                   }
                 }
-              },
+              }
             })
           }
         },
@@ -2753,13 +2764,13 @@ export default {
               },
               on: {
                 input: (val) => {
-                  if (params.index === 0){
+                  if (params.index === 0) {
                     t.formValidate.regulatorLeftRemainingTime = val
-                  }else{
+                  } else {
                     t.formValidate.regulatorRightRemainingTime = val
                   }
                 }
-              },
+              }
             })
           }
         },
@@ -2776,13 +2787,13 @@ export default {
               },
               on: {
                 input: (val) => {
-                  if (params.index === 0){
+                  if (params.index === 0) {
                     t.formValidate.regulatorLeftResidualLife = val
-                  }else{
+                  } else {
                     t.formValidate.regulatorRightResidualLife = val
                   }
                 }
-              },
+              }
             })
           }
         }
@@ -2811,7 +2822,7 @@ export default {
                 input: (val) => {
                   t.formValidate.engineModel = val
                 }
-              },
+              }
             })
           }
         },
@@ -2829,7 +2840,7 @@ export default {
                 input: (val) => {
                   t.formValidate.engineLeftNum = val
                 }
-              },
+              }
             })
           }
         },
@@ -2847,7 +2858,7 @@ export default {
                 input: (val) => {
                   t.formValidate.engineRemainingTime = val
                 }
-              },
+              }
             })
           }
         },
@@ -2866,7 +2877,7 @@ export default {
                 input: (val) => {
                   t.formValidate.engineLeftTotalServiceLife = val
                 }
-              },
+              }
             })
           }
         },
@@ -2884,7 +2895,7 @@ export default {
                 input: (val) => {
                   t.formValidate.engineLeftRepairedTimes = val
                 }
-              },
+              }
             })
           }
         },
@@ -2902,7 +2913,7 @@ export default {
                 input: (val) => {
                   t.formValidate.engineLeftSpecifiedLife = val
                 }
-              },
+              }
             })
           }
         },
@@ -2921,7 +2932,7 @@ export default {
                 input: (val) => {
                   t.formValidate.engineLeftLastRepairTime = val
                 }
-              },
+              }
             })
           }
         },
@@ -2939,7 +2950,7 @@ export default {
                 input: (val) => {
                   t.formValidate.engineLeftOverhaulFactory = val
                 }
-              },
+              }
             })
           }
         },
@@ -2957,7 +2968,7 @@ export default {
                 input: (val) => {
                   t.formValidate.engineLeftLastDeliveryDate = val
                 }
-              },
+              }
             })
           }
         }
@@ -2983,7 +2994,7 @@ export default {
                 input: (val) => {
                   t.formValidate.engineModel = val
                 }
-              },
+              }
             })
           }
         },
@@ -3001,7 +3012,7 @@ export default {
                 input: (val) => {
                   t.formValidate.engineLeftNum = val
                 }
-              },
+              }
             })
           }
         },
@@ -3020,7 +3031,7 @@ export default {
                 input: (val) => {
                   t.formValidate.engineLeftRemainingTime = val
                 }
-              },
+              }
             })
           }
         },
@@ -3039,7 +3050,7 @@ export default {
                 input: (val) => {
                   t.formValidate.engineLeftTotalServiceLife = val
                 }
-              },
+              }
             })
           }
         },
@@ -3058,7 +3069,7 @@ export default {
                 input: (val) => {
                   t.formValidate.engineRemainingTime = val
                 }
-              },
+              }
             })
           }
         },
@@ -3076,7 +3087,7 @@ export default {
                 input: (val) => {
                   t.formValidate.engineLeftRepairedTimes = val
                 }
-              },
+              }
             })
           }
         },
@@ -3094,7 +3105,7 @@ export default {
                 input: (val) => {
                   t.formValidate.engineLeftSpecifiedLife = val
                 }
-              },
+              }
             })
           }
         },
@@ -3113,7 +3124,7 @@ export default {
                 input: (val) => {
                   t.formValidate.engineLeftResidualLife = val
                 }
-              },
+              }
             })
           }
         },
@@ -3131,7 +3142,7 @@ export default {
                 input: (val) => {
                   t.formValidate.engineLeftRepairMakeFactory = val
                 }
-              },
+              }
             })
           }
         },
@@ -3149,7 +3160,7 @@ export default {
                 input: (val) => {
                   t.formValidate.engineLeftLastDeliveryDate = val
                 }
-              },
+              }
             })
           }
         }
@@ -3171,7 +3182,7 @@ export default {
                 input: (val) => {
                   t.formValidate.airGeneratorModel = val
                 }
-              },
+              }
             })
           }
         },
@@ -3189,7 +3200,7 @@ export default {
                 input: (val) => {
                   t.formValidate.airGeneratorNum = val
                 }
-              },
+              }
             })
           }
         },
@@ -3206,7 +3217,7 @@ export default {
                 input: (val) => {
                   t.formValidate.airGeneratorStartTimes = val
                 }
-              },
+              }
             })
           }
         },
@@ -3224,7 +3235,7 @@ export default {
                 input: (val) => {
                   t.formValidate.airGeneratorRepairTimes = val
                 }
-              },
+              }
             })
           }
         },
@@ -3242,7 +3253,7 @@ export default {
                 input: (val) => {
                   t.formValidate.airGeneratorRepairedTimes = val
                 }
-              },
+              }
             })
           }
         },
@@ -3260,7 +3271,7 @@ export default {
                 input: (val) => {
                   t.formValidate.airGeneratorSpecifiedStartingTimes = val
                 }
-              },
+              }
             })
           }
         },
@@ -3279,7 +3290,7 @@ export default {
                 input: (val) => {
                   t.formValidate.airGeneratorRemainingTimes = val
                 }
-              },
+              }
             })
           }
         },
@@ -3297,7 +3308,7 @@ export default {
                 input: (val) => {
                   t.formValidate.airGeneratorOverhaulFactory = val
                 }
-              },
+              }
             })
           }
         },
@@ -3309,13 +3320,13 @@ export default {
             return h('DatePicker', {
               props: {
                 value: t.formValidate.airGeneratorManufactureDate,
-                size: 'small',
+                size: 'small'
               },
               on: {
                 input: (val) => {
                   t.formValidate.airGeneratorManufactureDate = val
                 }
-              },
+              }
             })
           }
         }
@@ -3325,20 +3336,20 @@ export default {
   },
 
   created: function () {
-    if (Object.is(this.$route.query['id'], undefined)){
+    if (Object.is(this.$route.query['id'], undefined)) {
       return
     }
     this.$get(`/plane/findPlaneById/${this.$route.query['id']}`).then(res => {
       if (res) {
         this.formValidate = res.data
       } else {
-        this.$Message.error('请求失败');
+        this.$Message.error('请求失败')
       }
     })
   },
 
   methods: {
-    handleSpan1({row, column, rowIndex, columnIndex}) {
+    handleSpan1 ({row, column, rowIndex, columnIndex}) {
       if (rowIndex === 0 && columnIndex === 0) {
         return [2, 1]
       } else if (rowIndex === 1 && columnIndex === 0) {
@@ -3351,7 +3362,7 @@ export default {
         return [0, 0]
       }
     },
-    handleSpan2({row, column, rowIndex, columnIndex}) {
+    handleSpan2 ({row, column, rowIndex, columnIndex}) {
       if (rowIndex === 0 && columnIndex === 0) {
         return [2, 1]
       } else if (rowIndex === 1 && columnIndex === 0) {
@@ -3364,7 +3375,7 @@ export default {
         return [0, 0]
       }
     },
-    handleSubmit(name) {
+    handleSubmit (name) {
       this.$refs[name].validate((valid) => {
         if (valid) {
           if (Object.is(this.formValidate.id, null)) {
@@ -3382,11 +3393,11 @@ export default {
         }
       })
     },
-    exitNow() {
-      this.$store.dispatch('delVisitedViews', this.$route);
-      this.$router.go(-1);
+    exitNow () {
+      this.$store.dispatch('delVisitedViews', this.$route)
+      this.$router.go(-1)
     },
-    handleReset() {
+    handleReset () {
       this.$refs['formValidate'].resetFields()
     }
   }
