@@ -1,4 +1,4 @@
-export function toMin (time) {
+export function toMin(time) {
   if (Object.is(time, undefined) || Object.is(time, null) || Object.is(time, '')) {
     return 0
   }
@@ -9,11 +9,11 @@ export function toMin (time) {
     : parseInt(timeSplit[0]) * 60 * 60 + parseInt(timeSplit[1]) * 60 + parseInt(timeSplit[2])
 }
 
-export function toMax (time, mode = 'hhmm') {
+export function toMax(time, mode = 'hhmm') {
   if (mode === 'hhmm') {
-    let hour = Math.floor(time / 60).toString()
-    let minute = (time % 60).toString()
-    return hour + ':' + (minute.length === 1 ? '0' + minute : minute)
+    let hour = Math.floor(time / 60)
+    let minute = time % 60
+    return hour + ':' + (minute < 10 ? '0' + minute : minute)
   } else if (mode === 'hhmmss') {
     let hour = Math.floor(time / (60 * 60))
     let residualSecond = time - hour * 60 * 60
@@ -22,3 +22,10 @@ export function toMax (time, mode = 'hhmm') {
     return hour + ':' + (minute.length === 1 ? '0' + minute : minute) + ':' + (second.length === 1 ? '0' + second : second)
   }
 }
+
+// 比较两个时间  time1，time2均为日期类型
+// 判断两个时间段是否相差 m 个月
+export function completeDate(time1, time2) {
+  return time2.getDate() - time1.getDate() < 31
+}
+

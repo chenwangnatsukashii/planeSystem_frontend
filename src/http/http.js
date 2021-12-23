@@ -1,6 +1,5 @@
 // 封装axios请求
 import axios from "./axios.js"
-import qs from "qs";
 
 export default {
   /**

@@ -18,14 +18,16 @@
       </Table>
     </TabPane>
     <TabPane label="左机匣" name="receiver_left">
-      <Table stripe :columns="receiver_columns" :data="receiver_data" border height="1000">
+      <Table stripe :columns="receiver_columns" :data="receiver_data" border show-summary
+             :summary-method="receiverSummary">
         <template slot-scope="{ row, index }" slot="operation">
           <Button type="error" size="small" @click="deleteRecord(row.id, 'right')">删除</Button>
         </template>
       </Table>
     </TabPane>
     <TabPane label="右机匣" name="receiver_right">
-      <Table stripe :columns="receiver_columns" :data="receiver_data" border height="1000">
+      <Table stripe :columns="receiver_columns" :data="receiver_data" border show-summary
+             :summary-method="receiverSummary">
         <template slot-scope="{ row, index }" slot="operation">
           <Button type="error" size="small" @click="deleteRecord(row.id)">删除</Button>
         </template>
@@ -46,6 +48,7 @@
 import {addResume, deleteResume, addResumeEngineB} from "@/http/plane_system/base";
 import {addTime} from "@/view/resume/addTime";
 import {isEmpty} from "@/view/resume/isEmpty";
+import {toMin, toMax, completeDate} from "@/view/resume/timeOperation";
 
 export default {
   data() {
@@ -532,6 +535,34 @@ export default {
     engineSummary({columns, data}) {
       return this.addSelection();
     },
+    receiverSummary({columns, data}) {
+      let receiverStartTimes = 0
+      let receiverSStateWork = 0
+      let receiverYsStateWork = 0
+      let receiverSpStateWork = 0
+
+      for (let i = 0; i < this.receiver_data.length; i++) {
+        if (completeDate(new Date(this.receiver_data[i].receiverDate), new Date())) {
+          receiverStartTimes += this.receiver_data[i].receiverStartTimes
+          console.log(this.receiver_data[i].receiverSStateWork)
+          console.log(this.receiver_data[i].receiverYsStateWork)
+          receiverSStateWork += toMin(this.receiver_data[i].receiverSStateWork)
+          receiverYsStateWork += toMin(this.receiver_data[i].receiverYsStateWork)
+          receiverSpStateWork += toMin(this.receiver_data[i].receiverSpStateWork)
+        }
+      }
+      console.log(receiverSStateWork)
+      console.log(receiverYsStateWork)
+
+      return {
+        receiver_date: {key: 'receiver_date', value: '月结'},
+        receiver_start_times: {key: 'receiverStartTimes', value: receiverStartTimes},
+        receiver_s_state_work: {key: 'receiverSStateWork', value: toMax(receiverSStateWork)},
+        receiver_ys_state_work: {key: 'receiverYsStateWork', value: toMax(receiverYsStateWork)},
+        receiver_sp_state_work: {key: 'receiverSpStateWork', value: toMax(receiverSpStateWork)},
+      }
+    },
+
     addSelection() {
       let selection = this.selectionC
 

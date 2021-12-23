@@ -1,5 +1,3 @@
-let baseURL = process.env.VUE_APP_URL
-
 export default {
   /**
    * @description token在Cookie中存储的天数，默认1天
@@ -15,13 +13,10 @@ export default {
    * @description api请求基础路径
    */
   baseUrl: {
-    dev: 'https://www.easy-mock.com/mock/5add9213ce4d0e69998a6f51/iview-admin/',
-    // pro: 'http://119.3.191.100:9998/'
-    pro: 'http://localhost:9998/'
+    dev: 'http://localhost:9998/',
+    pro: 'http://119.3.191.100:9998/'
   },
 
-  // baseURL: 'http://119.3.191.100:9998/',
-  baseURL: 'http://localhost:9998/',
   timeout: 10000,
   version: "1.0.0",
   /**
@@ -36,19 +31,6 @@ export default {
     //   showInHeader: true, // 设为false后不会在顶部显示错误日志徽标
     //   developmentOff: false // 设为true后在开发环境不会收集错误信息，方便开发中排查错误
     // }
-  },
-
-  proxyTable: {
-    '/plane': {
-      target: 'http://119.3.191.100:9998',   //请求地址
-      changeOrigin: true, //true表示跨域
-      secure: false,
-      ws: true,
-      logLevel: 'debug',
-      pathRewrite: {
-        '^/token': ''
-      }
-    }
   }
 
 }

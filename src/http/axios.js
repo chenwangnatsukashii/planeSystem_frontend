@@ -4,12 +4,12 @@ import qs from "qs"
 import config from "@/config"
 
 // 创建 axios 实例
-const {baseURL, timeout} = config
+const {baseUrl, timeout} = config
 
 const ax = axios.create({
   // 是否跨站点访问控制请求使用凭证(Cookie)
   withCredentials: true,
-  baseURL: baseURL, // 配置接口地址
+  baseURL: baseUrl.pro, // 配置接口地址
   // headers:{
   //   contentType : "application/json;charset=UTF-8",
   // },

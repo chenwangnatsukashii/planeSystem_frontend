@@ -86,7 +86,7 @@ import {toMin, toMax} from './timeOperation'
 import _ from 'lodash'
 
 export default {
-  data () {
+  data() {
     return {
       type: 'engine_left',
       adjustOld: 0,
@@ -94,6 +94,7 @@ export default {
       typeName: '选择方式',
       selectionC: null,
       formatZTGZ: 'HH:mm:ss',
+      formulaType: '',
 
       engine_columns: [
         {
@@ -1279,15 +1280,15 @@ export default {
     }
   },
 
-  created () {
+  created() {
     this.getData()
   },
 
-  mounted () {
+  mounted() {
   },
 
   methods: {
-    getData () {
+    getData() {
       this.$get(`/plane/getResumeById/${this.$route.query['id']}/${this.type}`).then(res => {
         if (res) {
           if (this.type === 'engine_left' || this.type === 'engine_right') {
@@ -1309,21 +1310,22 @@ export default {
         }
       })
     },
-    changeType (type) {
+
+    changeType(type) {
       this.engine_data = []
       this.receiver_data = []
 
       this.type = type
       this.getData()
     },
-    deleteRecord (id) {
+    deleteRecord(id) {
       deleteResume('/plane/deleteResume/' + id).then(res => {
         this.$Message.success('删除成功!')
         this.engine_data = []
         this.getData()
       })
     },
-    addRecord () {
+    addRecord() {
       if (this.type === 'engine_left' || this.type === 'engine_right') {
         this.engine_data.push({
           type: this.type === 'engine_left' ? 'left' : 'right',
@@ -1347,7 +1349,7 @@ export default {
         })
       }
     },
-    addBelow () {
+    addBelow() {
       this.engine_data_below.push({
         type: this.type === 'engine_left' ? 'left' : 'right',
         engineStartTimes: null,
@@ -1356,11 +1358,11 @@ export default {
         engineSpStateWork: ''
       })
     },
-    deleteBelow (index) {
+    deleteBelow(index) {
       this.engine_data_below.splice(index, 1)
       this.$Message.success('删除成功!')
     },
-    saveAndClean () {
+    saveAndClean() {
       for (let i = 0; i < this.engine_data.length; i++) {
         for (let j = 0; j < this.engine_data_below.length; j++) {
           if (this.engine_data[i].engineDate === this.engine_data_below[j].engineDate) {
@@ -1372,19 +1374,45 @@ export default {
             this.engine_data[i].engineSStateWork = toMax(toMin(this.engine_data[i].engineSStateWork) + toMin(this.engine_data_below[j].engineSStateWork), 'hhmmss')
             this.engine_data[i].engineYsStateWork = toMax(toMin(this.engine_data[i].engineYsStateWork) + toMin(this.engine_data_below[j].engineYsStateWork), 'hhmmss')
             this.engine_data[i].engineSpStateWork = toMax(toMin(this.engine_data[i].engineSpStateWork) + toMin(this.engine_data_below[j].engineSpStateWork), 'hhmmss')
-            this.engine_data[i].engineSAllStateWork = toMax(toMin(this.engine_data[i].engineSAllStateWork) + toMin(this.engine_data_below[j].engineSAllStateWork))
-            this.engine_data[i].engineSpAllStateWork = toMax(toMin(this.engine_data[i].engineSpAllStateWork) + toMin(this.engine_data_below[j].engineSpAllStateWork))
+
+            if (this.formulaType === 'type3') {
+              let san1 = toMin(this.engine_data_below[j].engineSGroundFlight)
+              let wu1 = toMin(this.engine_data_below[j].engineSFlight)
+              let yuShu1 = (san1 - wu1) % 5
+              let san2 = toMin(this.engine_data_below[j].engineSpGroundFlight)
+              let wu2 = toMin(this.engine_data_below[j].engineSpFlight)
+              let yuShu2 = (san2 - wu2) % 5
+
+              if (yuShu1 === 0) {
+                this.engine_data[i].engineSAllStateWork = toMax(toMin(this.engine_data[i].engineSAllStateWork) + (san1 - wu1) / 5)
+              } else if (yuShu1 < 3) {
+                this.engine_data[i].engineSAllStateWork = toMax(toMin(this.engine_data[i].engineSAllStateWork) + Math.floor((san1 - wu1) / 5))
+              } else {
+                this.engine_data[i].engineSAllStateWork = toMax(toMin(this.engine_data[i].engineSAllStateWork) + Math.ceil((san1 - wu1) / 5))
+              }
+
+              if (yuShu2 === 0) {
+                this.engine_data[i].engineSpAllStateWork = toMax(toMin(this.engine_data[i].engineSpAllStateWork) + (san1 - wu1) / 5)
+              } else if (yuShu2 < 3) {
+                this.engine_data[i].engineSpAllStateWork = toMax(toMin(this.engine_data[i].engineSpAllStateWork) + Math.floor((san1 - wu1) / 5))
+              } else {
+                this.engine_data[i].engineSpAllStateWork = toMax(toMin(this.engine_data[i].engineSpAllStateWork) + Math.ceil((san1 - wu1) / 5))
+              }
+            } else {
+              this.engine_data[i].engineSAllStateWork = toMax(toMin(this.engine_data[i].engineSAllStateWork) + toMin(this.engine_data_below[j].engineSAllStateWork))
+              this.engine_data[i].engineSpAllStateWork = toMax(toMin(this.engine_data[i].engineSpAllStateWork) + toMin(this.engine_data_below[j].engineSpAllStateWork))
+            }
+
             this.engine_data[i].engineSMainCycle += this.engine_data_below[j].engineSMainCycle
             this.engine_data[i].engineSpMainCycle += this.engine_data_below[j].engineSpMainCycle
           }
         }
       }
 
-      console.log(this.engine_data)
-      this.$Message.success('添加成功!')
       this.engine_data_below = []
+      this.$Message.success("保存成功！")
     },
-    saveRecord () {
+    saveRecord() {
       let data = []
 
       if (this.type === 'engine_left' || this.type === 'engine_right') {
@@ -1408,7 +1436,7 @@ export default {
         })
       }
     },
-    adjustBelow12 (index) {
+    adjustBelow12(index) {
       let len = this.engine_data.length
       ++index
       if (len === index) {
@@ -1419,7 +1447,7 @@ export default {
         ++index
       }
     },
-    adjustBelow13 (index) {
+    adjustBelow13(index) {
       let len = this.engine_data.length
       ++index
       if (len === index) {
@@ -1430,95 +1458,104 @@ export default {
         ++index
       }
     },
-    formulaMode (type) {
-      if (type === 'type1' || type === 'type4') {
-        this.engine_data_tmp = _.cloneDeep(this.engine_data)
+    formulaMode(type) {
+      this.formulaType = type
+      this.$get(`/plane/getResumeById/${this.$route.query['id']}/${this.type}`).then(res => {
+        if (res) {
+          this.engine_data_tmp = res.data
+          if (type === 'type1' || type === 'type4') {
+            if (type === 'type4') {
+              this.typeName = '第四种'
+              for (let i = 0; i < this.engine_data_tmp.length; i++) {
+                let timeSplit1 = this.engine_data_tmp[i].engineSStateWork.split(':')
+                let timeSplit2 = this.engine_data_tmp[i].engineYsStateWork.split(':')
+                let timeSplit3 = this.engine_data_tmp[i].engineSpStateWork.split(':')
+                if (parseInt(timeSplit1[2]) < 30) {
+                  this.engine_data_tmp[i].engineSStateWork = timeSplit1[0] + ':' + timeSplit1[1]
+                } else {
+                  this.engine_data_tmp[i].engineSStateWork = toMax(toMin(timeSplit1[0] + ':' + timeSplit1[1]), '00:01')
+                }
 
-        if (type === 'type4') {
-          this.typeName = '第四种'
-          for (let i = 0; i < this.engine_data_tmp.length; i++) {
-            let timeSplit1 = this.engine_data_tmp[i].engineSStateWork.split(':')
-            let timeSplit2 = this.engine_data_tmp[i].engineYsStateWork.split(':')
-            let timeSplit3 = this.engine_data_tmp[i].engineSpStateWork.split(':')
-            if (parseInt(timeSplit1[2]) < 30) {
-              this.engine_data_tmp[i].engineSStateWork = timeSplit1[0] + ':' + timeSplit1[1]
-            } else {
-              this.engine_data_tmp[i].engineSStateWork = toMax(toMin(timeSplit1[0] + ':' + timeSplit1[1]), '00:01')
+                if (parseInt(timeSplit2[2]) < 30) {
+                  this.engine_data_tmp[i].engineYsStateWork = timeSplit2[0] + ':' + timeSplit2[1]
+                } else {
+                  this.engine_data_tmp[i].engineYsStateWork = toMax(toMin(timeSplit2[0] + ':' + timeSplit2[1]), '00:01')
+                }
+
+                if (parseInt(timeSplit3[2]) < 30) {
+                  this.engine_data_tmp[i].engineSpStateWork = timeSplit3[0] + ':' + timeSplit3[1]
+                } else {
+                  this.engine_data_tmp[i].engineSpStateWork = toMax(toMin(timeSplit3[0] + ':' + timeSplit3[1]), '00:01')
+                }
+              }
+              this.formatZTGZ = 'HH:mm'
+            } else if (type === 'type1') {
+              this.typeName = '第一种'
+              this.formatZTGZ = 'HH:mm:ss'
             }
 
-            if (parseInt(timeSplit2[2]) < 30) {
-              this.engine_data_tmp[i].engineYsStateWork = timeSplit2[0] + ':' + timeSplit2[1]
-            } else {
-              this.engine_data_tmp[i].engineYsStateWork = toMax(toMin(timeSplit2[0] + ':' + timeSplit2[1]), '00:01')
+            for (let i = 0; i < this.engine_data_tmp.length; i++) {
+              if (i === 0) {
+                this.engine_data_tmp[i].engineSAllStateWork = addTime(minusTime(this.engine_data_tmp[i].engineSGroundFlight,
+                  this.engine_data_tmp[i].engineSFlight, 5), this.engine_data_tmp[i].engineSFlight, 'hhmm')
+
+                this.engine_data_tmp[i].engineSpAllStateWork = addTime(minusTime(this.engine_data_tmp[i].engineSpGroundFlight,
+                  this.engine_data_tmp[i].engineSpFlight, 5), this.engine_data_tmp[i].engineSpFlight, 'hhmm')
+              } else {
+                this.engine_data_tmp[i].engineSAllStateWork = addTime(addTime(minusTime(this.engine_data_tmp[i].engineSGroundFlight,
+                    this.engine_data_tmp[i].engineSFlight, 5), this.engine_data_tmp[i].engineSFlight, 'hhmm'),
+                  this.engine_data_tmp[i - 1].engineSAllStateWork, 'hhmm')
+
+                this.engine_data_tmp[i].engineSpAllStateWork = addTime(addTime(minusTime(this.engine_data_tmp[i].engineSpGroundFlight,
+                    this.engine_data_tmp[i].engineSpFlight, 5), this.engine_data_tmp[i].engineSpFlight, 'hhmm'),
+                  this.engine_data_tmp[i - 1].engineSpAllStateWork, 'hhmm')
+              }
             }
 
-            if (parseInt(timeSplit3[2]) < 30) {
-              this.engine_data_tmp[i].engineSpStateWork = timeSplit3[0] + ':' + timeSplit3[1]
-            } else {
-              this.engine_data_tmp[i].engineSpStateWork = toMax(toMin(timeSplit3[0] + ':' + timeSplit3[1]), '00:01')
+            this.engine_data = this.engine_data_tmp
+          } else if (type === 'type2') {
+            this.typeName = '第二种'
+            this.engine_data_tmp = _.cloneDeep(this.engine_data)
+
+            for (let i = 0; i < this.engine_data_tmp.length; i++) {
+              let minSGF = toMin(this.engine_data_tmp[i].engineSGroundFlight)
+              let minSF = toMin(this.engine_data_tmp[i].engineSFlight)
+              let minSpGF = toMin(this.engine_data_tmp[i].engineSpGroundFlight)
+              let minSpF = toMin(this.engine_data_tmp[i].engineSpFlight)
+              if (i === 0) {
+                this.engine_data_tmp[i].leftMod = (minSGF - minSF) % 5
+                this.engine_data_tmp[i].engineSAllStateWork = toMax(Math.floor((minSGF - minSF) / 5) + minSF)
+
+                this.engine_data_tmp[i].rightMod = (minSpGF - minSpF) % 5
+                this.engine_data_tmp[i].engineSpAllStateWork = toMax(Math.floor((minSpGF - minSpF) / 5) + minSpF)
+              } else {
+                let lo = minSGF - minSF + this.engine_data_tmp[i - 1].leftMod
+                this.engine_data_tmp[i].leftMod = lo % 5
+                this.engine_data_tmp[i].engineSAllStateWork = toMax(Math.floor(lo / 5) + minSF +
+                  toMin(this.engine_data_tmp[i - 1].engineSAllStateWork))
+
+                let ro = minSpGF - minSpF + this.engine_data_tmp[i - 1].rightMod
+                this.engine_data_tmp[i].rightMod = ro % 5
+                this.engine_data_tmp[i].engineSpAllStateWork = toMax(Math.floor(ro / 5) + minSpF +
+                  toMin(this.engine_data_tmp[i - 1].engineSpAllStateWork))
+              }
             }
+
+            this.engine_data = this.engine_data_tmp
+            console.log(this.engine_data)
+          } else if (type === 'type3') {
+            this.typeName = '第三种'
           }
-          this.formatZTGZ = 'HH:mm'
-        } else if (type === 'type1') {
-          this.typeName = '第一种'
-          this.formatZTGZ = 'HH:mm:ss'
+        } else {
+          this.$Message.error('请求失败')
         }
+      })
 
-        for (let i = 0; i < this.engine_data_tmp.length; i++) {
-          if (i === 0) {
-            this.engine_data_tmp[i].engineSAllStateWork = addTime(minusTime(this.engine_data_tmp[i].engineSGroundFlight,
-              this.engine_data_tmp[i].engineSFlight, 5), this.engine_data_tmp[i].engineSFlight, 'hhmm')
-
-            this.engine_data_tmp[i].engineSpAllStateWork = addTime(minusTime(this.engine_data_tmp[i].engineSpGroundFlight,
-              this.engine_data_tmp[i].engineSpFlight, 5), this.engine_data_tmp[i].engineSpFlight, 'hhmm')
-          } else {
-            this.engine_data_tmp[i].engineSAllStateWork = addTime(addTime(minusTime(this.engine_data_tmp[i].engineSGroundFlight,
-              this.engine_data_tmp[i].engineSFlight, 5), this.engine_data_tmp[i].engineSFlight, 'hhmm'),
-            this.engine_data_tmp[i - 1].engineSAllStateWork, 'hhmm')
-
-            this.engine_data_tmp[i].engineSpAllStateWork = addTime(addTime(minusTime(this.engine_data_tmp[i].engineSpGroundFlight,
-              this.engine_data_tmp[i].engineSpFlight, 5), this.engine_data_tmp[i].engineSpFlight, 'hhmm'),
-            this.engine_data_tmp[i - 1].engineSpAllStateWork, 'hhmm')
-          }
-        }
-
-        this.engine_data = this.engine_data_tmp
-      } else if (type === 'type2') {
-        this.typeName = '第二种'
-        this.engine_data_tmp = _.cloneDeep(this.engine_data)
-
-        for (let i = 0; i < this.engine_data_tmp.length; i++) {
-          let minSGF = toMin(this.engine_data_tmp[i].engineSGroundFlight)
-          let minSF = toMin(this.engine_data_tmp[i].engineSFlight)
-          let minSpGF = toMin(this.engine_data_tmp[i].engineSpGroundFlight)
-          let minSpF = toMin(this.engine_data_tmp[i].engineSpFlight)
-          if (i === 0) {
-            this.engine_data_tmp[i].leftMod = (minSGF - minSF) % 5
-            this.engine_data_tmp[i].engineSAllStateWork = toMax(Math.floor((minSGF - minSF) / 5) + minSF)
-
-            this.engine_data_tmp[i].rightMod = (minSpGF - minSpF) % 5
-            this.engine_data_tmp[i].engineSpAllStateWork = toMax(Math.floor((minSpGF - minSpF) / 5) + minSpF)
-          } else {
-            let lo = minSGF - minSF + this.engine_data_tmp[i - 1].leftMod
-            this.engine_data_tmp[i].leftMod = lo % 5
-            this.engine_data_tmp[i].engineSAllStateWork = toMax(Math.floor(lo / 5) + minSF +
-              toMin(this.engine_data_tmp[i - 1].engineSAllStateWork))
-
-            let ro = minSpGF - minSpF + this.engine_data_tmp[i - 1].rightMod
-            this.engine_data_tmp[i].rightMod = ro % 5
-            this.engine_data_tmp[i].engineSpAllStateWork = toMax(Math.floor(ro / 5) + minSpF +
-              toMin(this.engine_data_tmp[i - 1].engineSpAllStateWork))
-          }
-        }
-        this.engine_data = this.engine_data_tmp
-      } else if (type === 'type3') {
-        this.typeName = '第三种'
-      }
     },
-    selectionChange (selection) {
+    selectionChange(selection) {
       this.selectionC = selection
     },
-    addSelection () {
+    addSelection() {
       let selection = this.selectionC
 
       let engineStartTimes = 0
@@ -1570,7 +1607,7 @@ export default {
         engine_sp_main_cycle: {key: 'engineSpMainCycle', value: engineSpMainCycle}
       }
     },
-    addReceiver () {
+    addReceiver() {
       let selection = this.selectionC
 
       let receiverStartTimes = 0
@@ -1616,10 +1653,10 @@ export default {
         receiver_sp_all_state_work: {key: 'receiverSpAllStateWork', value: receiverSpAllStateWork}
       }
     },
-    engineSummary ({columns, data}) {
+    engineSummary({columns, data}) {
       return this.addSelection()
     },
-    receiverSummary ({columns, data}) {
+    receiverSummary({columns, data}) {
       return this.addReceiver()
     }
   }
