@@ -143,7 +143,7 @@
       </Col>
       <Col span="4">
         <FormItem label="总起落次数" prop="totalUpDown">
-          <InputNumber :max="10000" :min="0" v-model="formValidate.totalUpDown"></InputNumber>&nbsp;次
+          <InputNumber :max="99999" :min="0" v-model="formValidate.totalUpDown"></InputNumber>&nbsp;次
         </FormItem>
       </Col>
       <Col span="4">
@@ -284,7 +284,7 @@
       </Col>
       <Col span="4">
         <FormItem label="总起落次数" prop="totalUpDown">
-          <InputNumber :max="10000" :min="0" v-model="formValidate.totalUpDown"></InputNumber>&nbsp;次
+          <InputNumber :max="99999" :min="0" v-model="formValidate.totalUpDown"></InputNumber>&nbsp;次
         </FormItem>
       </Col>
       <Col span="4">
@@ -339,7 +339,7 @@
       </Col>
       <Col span="4">
         <FormItem label="总起落次数" prop="totalUpDown">
-          <InputNumber :max="10000" :min="0" v-model="formValidate.totalUpDown"></InputNumber>&nbsp;次
+          <InputNumber :max="99999" :min="0" v-model="formValidate.totalUpDown"></InputNumber>&nbsp;次
         </FormItem>
       </Col>
       <Col span="4">

@@ -2,13 +2,13 @@
   <Tabs v-model="type" type="card" value="resume_j11" @on-click="changeType">
     <TabPane label="飞机" name="plane">飞机未知</TabPane>
     <TabPane label="左发" name="engine_left">
-      <Table @on-selection-change="selectionChange" row-key="id" show-summary :summary-method="engineSummary" stripe
+      <Table @on-selection-change="selectionChange" show-summary :summary-method="engineSummary" stripe
              :columns="engine_columns" :data="engine_data" border>
         <template slot-scope="{ row, index }" slot="operation">
           <Button type="error" size="small" @click="deleteRecord(row.id)">删除</Button>
         </template>
       </Table>
-      <Button type="primary" style=" float: right;" shape="circle" @click="addBelow">添加</Button>
+      <Button type="primary" style="float: right;" shape="circle" @click="addBelow">添加</Button>
       <Button type="primary" style="margin-left: 89%;" shape="circle" @click="saveAndClean">保存并清空</Button>
       <Table :show-header="false" stripe :columns="engine_columns_below" :data="engine_data_below" border>
         <template slot-scope="{ row, index }" slot="operation">
@@ -23,31 +23,39 @@
           <Button type="error" size="small" @click="deleteRecord(row.id)">删除</Button>
         </template>
       </Table>
+      <Button type="primary" style="float: right;" shape="circle" @click="addBelow">添加</Button>
+      <Button type="primary" style="margin-left: 89%;" shape="circle" @click="saveAndClean">保存并清空</Button>
+      <Table :show-header="false" stripe :columns="engine_columns_below" :data="engine_data_below" border>
+        <template slot-scope="{ row, index }" slot="operation">
+          <Button type="error" size="small" @click="deleteBelow(index)">删除</Button>
+        </template>
+      </Table>
     </TabPane>
     <TabPane label="左机匣" name="receiver_left">
       <Table @on-selection-change="selectionChange" show-summary :summary-method="receiverSummary" stripe
              :columns="receiver_columns" :data="receiver_data" border>
         <template slot-scope="{ row, index }" slot="operation">
-          <Button type="error" size="small" @click="deleteRecord(row.id, 'right')">删除</Button>
+          <Button type="error" size="small" @click="deleteRecord(row.id)">删除</Button>
         </template>
       </Table>
     </TabPane>
     <TabPane label="右机匣" name="receiver_right">
-      <Table stripe :columns="receiver_columns" :data="receiver_data" border height="1000">
+      <Table @on-selection-change="selectionChange" show-summary :summary-method="receiverSummary" stripe
+             :columns="receiver_columns" :data="receiver_data" border>
         <template slot-scope="{ row, index }" slot="operation">
           <Button type="error" size="small" @click="deleteRecord(row.id)">删除</Button>
         </template>
       </Table>
     </TabPane>
     <TabPane label="左小发" name="engine_s_left">
-      <Table stripe :columns="engine_s_columns" :data="engine_s_data" border height="1000">
+      <Table stripe :columns="engine_s_columns" :data="engine_s_data" border>
         <template slot-scope="{ row, index }" slot="operation">
           <Button type="error" size="small" @click="deleteRecord(row.id)">删除</Button>
         </template>
       </Table>
     </TabPane>
     <TabPane label="右小发" name="engine_s_right">
-      <Table stripe :columns="engine_s_columns" :data="engine_s_data" border height="1000">
+      <Table stripe :columns="engine_s_columns" :data="engine_s_data" border>
         <template slot-scope="{ row, index }" slot="operation">
           <Button type="error" size="small" @click="deleteRecord(row.id)">删除</Button>
         </template>
@@ -86,7 +94,7 @@ import {toMin, toMax} from './timeOperation'
 import _ from 'lodash'
 
 export default {
-  data() {
+  data () {
     return {
       type: 'engine_left',
       adjustOld: 0,
@@ -1194,7 +1202,7 @@ export default {
               key: 's_engine_last_repair',
               align: 'center',
               render: (h, params) => {
-                return h('Input', {
+                return h('InputNumber', {
                   props: {
                     value: this.engine_s_data[params.index].sEngineLastRepair,
                     size: 'small'
@@ -1212,7 +1220,7 @@ export default {
               key: 's_engine_last_oil_seal_repair',
               align: 'center',
               render: (h, params) => {
-                return h('Input', {
+                return h('InputNumber', {
                   props: {
                     value: this.engine_s_data[params.index].sEngineLastOilSealRepair,
                     size: 'small'
@@ -1237,7 +1245,7 @@ export default {
               key: 's_engine_all_start',
               align: 'center',
               render: (h, params) => {
-                return h('Input', {
+                return h('InputNumber', {
                   props: {
                     value: this.engine_s_data[params.index].sEngineAllStart,
                     size: 'small'
@@ -1255,7 +1263,7 @@ export default {
               key: 's_engine_all_oil_seal',
               align: 'center',
               render: (h, params) => {
-                return h('Input', {
+                return h('InputNumber', {
                   props: {
                     value: this.engine_s_data[params.index].sEngineAllOilSeal,
                     size: 'small'
@@ -1280,15 +1288,12 @@ export default {
     }
   },
 
-  created() {
+  created () {
     this.getData()
   },
 
-  mounted() {
-  },
-
   methods: {
-    getData() {
+    getData () {
       this.$get(`/plane/getResumeById/${this.$route.query['id']}/${this.type}`).then(res => {
         if (res) {
           if (this.type === 'engine_left' || this.type === 'engine_right') {
@@ -1310,22 +1315,22 @@ export default {
         }
       })
     },
-
-    changeType(type) {
+    changeType (type) {
       this.engine_data = []
       this.receiver_data = []
+      this.engine_data_below = []
 
       this.type = type
       this.getData()
     },
-    deleteRecord(id) {
+    deleteRecord (id) {
       deleteResume('/plane/deleteResume/' + id).then(res => {
         this.$Message.success('删除成功!')
         this.engine_data = []
         this.getData()
       })
     },
-    addRecord() {
+    addRecord () {
       if (this.type === 'engine_left' || this.type === 'engine_right') {
         this.engine_data.push({
           type: this.type === 'engine_left' ? 'left' : 'right',
@@ -1349,7 +1354,7 @@ export default {
         })
       }
     },
-    addBelow() {
+    addBelow () {
       this.engine_data_below.push({
         type: this.type === 'engine_left' ? 'left' : 'right',
         engineStartTimes: null,
@@ -1358,11 +1363,11 @@ export default {
         engineSpStateWork: ''
       })
     },
-    deleteBelow(index) {
+    deleteBelow (index) {
       this.engine_data_below.splice(index, 1)
       this.$Message.success('删除成功!')
     },
-    saveAndClean() {
+    saveAndClean () {
       for (let i = 0; i < this.engine_data.length; i++) {
         for (let j = 0; j < this.engine_data_below.length; j++) {
           if (this.engine_data[i].engineDate === this.engine_data_below[j].engineDate) {
@@ -1410,9 +1415,9 @@ export default {
       }
 
       this.engine_data_below = []
-      this.$Message.success("保存成功！")
+      this.$Message.success('保存成功！')
     },
-    saveRecord() {
+    saveRecord () {
       let data = []
 
       if (this.type === 'engine_left' || this.type === 'engine_right') {
@@ -1436,7 +1441,7 @@ export default {
         })
       }
     },
-    adjustBelow12(index) {
+    adjustBelow12 (index) {
       let len = this.engine_data.length
       ++index
       if (len === index) {
@@ -1447,7 +1452,7 @@ export default {
         ++index
       }
     },
-    adjustBelow13(index) {
+    adjustBelow13 (index) {
       let len = this.engine_data.length
       ++index
       if (len === index) {
@@ -1458,7 +1463,7 @@ export default {
         ++index
       }
     },
-    formulaMode(type) {
+    formulaMode (type) {
       this.formulaType = type
       this.$get(`/plane/getResumeById/${this.$route.query['id']}/${this.type}`).then(res => {
         if (res) {
@@ -1503,12 +1508,12 @@ export default {
                   this.engine_data_tmp[i].engineSpFlight, 5), this.engine_data_tmp[i].engineSpFlight, 'hhmm')
               } else {
                 this.engine_data_tmp[i].engineSAllStateWork = addTime(addTime(minusTime(this.engine_data_tmp[i].engineSGroundFlight,
-                    this.engine_data_tmp[i].engineSFlight, 5), this.engine_data_tmp[i].engineSFlight, 'hhmm'),
-                  this.engine_data_tmp[i - 1].engineSAllStateWork, 'hhmm')
+                  this.engine_data_tmp[i].engineSFlight, 5), this.engine_data_tmp[i].engineSFlight, 'hhmm'),
+                this.engine_data_tmp[i - 1].engineSAllStateWork, 'hhmm')
 
                 this.engine_data_tmp[i].engineSpAllStateWork = addTime(addTime(minusTime(this.engine_data_tmp[i].engineSpGroundFlight,
-                    this.engine_data_tmp[i].engineSpFlight, 5), this.engine_data_tmp[i].engineSpFlight, 'hhmm'),
-                  this.engine_data_tmp[i - 1].engineSpAllStateWork, 'hhmm')
+                  this.engine_data_tmp[i].engineSpFlight, 5), this.engine_data_tmp[i].engineSpFlight, 'hhmm'),
+                this.engine_data_tmp[i - 1].engineSpAllStateWork, 'hhmm')
               }
             }
 
@@ -1550,12 +1555,11 @@ export default {
           this.$Message.error('请求失败')
         }
       })
-
     },
-    selectionChange(selection) {
+    selectionChange (selection) {
       this.selectionC = selection
     },
-    addSelection() {
+    addSelection () {
       let selection = this.selectionC
 
       let engineStartTimes = 0
@@ -1607,7 +1611,7 @@ export default {
         engine_sp_main_cycle: {key: 'engineSpMainCycle', value: engineSpMainCycle}
       }
     },
-    addReceiver() {
+    addReceiver () {
       let selection = this.selectionC
 
       let receiverStartTimes = 0
@@ -1653,10 +1657,10 @@ export default {
         receiver_sp_all_state_work: {key: 'receiverSpAllStateWork', value: receiverSpAllStateWork}
       }
     },
-    engineSummary({columns, data}) {
+    engineSummary ({columns, data}) {
       return this.addSelection()
     },
-    receiverSummary({columns, data}) {
+    receiverSummary ({columns, data}) {
       return this.addReceiver()
     }
   }
