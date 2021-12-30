@@ -544,15 +544,11 @@ export default {
       for (let i = 0; i < this.receiver_data.length; i++) {
         if (completeDate(new Date(this.receiver_data[i].receiverDate), new Date())) {
           receiverStartTimes += this.receiver_data[i].receiverStartTimes
-          console.log(this.receiver_data[i].receiverSStateWork)
-          console.log(this.receiver_data[i].receiverYsStateWork)
           receiverSStateWork += toMin(this.receiver_data[i].receiverSStateWork)
           receiverYsStateWork += toMin(this.receiver_data[i].receiverYsStateWork)
           receiverSpStateWork += toMin(this.receiver_data[i].receiverSpStateWork)
         }
       }
-      console.log(receiverSStateWork)
-      console.log(receiverYsStateWork)
 
       return {
         receiver_date: {key: 'receiver_date', value: '月结'},

@@ -243,8 +243,8 @@ export default {
             this.$Message.success('添加成功!')
             this.newDataShow = false
             this.cancel()
+            this.searchPlane()
           })
-          this.$router.go(0)
         } else {
           setTimeout(() => {
             this.loading = false;

@@ -303,8 +303,6 @@ export default {
                           this.engine_data[params.index].engineSStateWork = val
                           // 如果值的变化需要动态计算
                           if (this.formatZTGZ === 'HH:mm:ss') {
-                            console.log(toMin(val))
-                            console.log(toMin(this.engine_data[params.index].engineYsStateWork))
                             this.engine_data[params.index].engineSpStateWork = toMax(toMin(val) + toMin(this.engine_data[params.index].engineYsStateWork), 'hhmmss')
                           }
                         }
@@ -1547,7 +1545,6 @@ export default {
             }
 
             this.engine_data = this.engine_data_tmp
-            console.log(this.engine_data)
           } else if (type === 'type3') {
             this.typeName = '第三种'
           }
