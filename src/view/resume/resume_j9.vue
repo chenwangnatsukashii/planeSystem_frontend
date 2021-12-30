@@ -1,7 +1,7 @@
 <template>
   <div>
     <Button type="primary" style="margin-right: 5px;" shape="circle" slot="extra" @click="addRecord">添加</Button>
-    <Button type="primary" style="" shape="circle" slot="extra" @click="saveRecord">保存</Button>
+    <Button type="primary" shape="circle" slot="extra" @click="saveRecord">保存</Button>
     <Table @on-selection-change="selectionChange" show-summary :summary-method="handleSummary" stripe
            :columns="resume_j9_columns" :data="resume_j9_data" border>
       <template slot-scope="{ row, index }" slot="operation">
@@ -17,11 +17,11 @@
 }
 </style>
 <script>
-import {addResumeNine, deleteResumeNine} from "@/http/plane_system/base";
-import {isEmpty} from "./isEmpty"
+import {addResumeNine, deleteResumeNine} from '@/http/plane_system/base'
+import {isEmpty} from './isEmpty'
 
 export default {
-  data() {
+  data () {
     return {
       selectionC: null,
       resume_j9_columns: [
@@ -53,7 +53,7 @@ export default {
                         'on-change': (val) => {
                           this.resume_j9_data[params.index].nineDate = val
                         }
-                      },
+                      }
                     })
                   }
                 }
@@ -85,7 +85,7 @@ export default {
                           this.resume_j9_data[params.index].groundAllHour = val
                           this.addGroundAir(params.index)
                         }
-                      },
+                      }
                     })
                   }
                 },
@@ -105,7 +105,7 @@ export default {
                           this.resume_j9_data[params.index].groundAllMinute = val
                           this.addGroundAir(params.index)
                         }
-                      },
+                      }
                     })
                   }
                 }
@@ -130,7 +130,7 @@ export default {
                         input: (val) => {
                           this.resume_j9_data[params.index].groundBigHour = val
                         }
-                      },
+                      }
                     })
                   }
                 },
@@ -149,7 +149,7 @@ export default {
                         input: (val) => {
                           this.resume_j9_data[params.index].groundBigMinute = val
                         }
-                      },
+                      }
                     })
                   }
                 }
@@ -175,7 +175,7 @@ export default {
                         input: (val) => {
                           this.resume_j9_data[params.index].groundAddHour = val
                         }
-                      },
+                      }
                     })
                   }
                 },
@@ -194,7 +194,7 @@ export default {
                         input: (val) => {
                           this.resume_j9_data[params.index].groundAddMinute = val
                         }
-                      },
+                      }
                     })
                   }
                 }
@@ -226,7 +226,7 @@ export default {
                           this.resume_j9_data[params.index].airAllHour = val
                           this.addGroundAir(params.index)
                         }
-                      },
+                      }
                     })
                   }
                 },
@@ -246,7 +246,7 @@ export default {
                           this.resume_j9_data[params.index].airAllMinute = val
                           this.addGroundAir(params.index)
                         }
-                      },
+                      }
                     })
                   }
                 }
@@ -271,7 +271,7 @@ export default {
                         input: (val) => {
                           this.resume_j9_data[params.index].airBigHour = val
                         }
-                      },
+                      }
                     })
                   }
                 },
@@ -290,7 +290,7 @@ export default {
                         input: (val) => {
                           this.resume_j9_data[params.index].airBigMinute = val
                         }
-                      },
+                      }
                     })
                   }
                 }
@@ -315,7 +315,7 @@ export default {
                         input: (val) => {
                           this.resume_j9_data[params.index].airAddHour = val
                         }
-                      },
+                      }
                     })
                   }
                 },
@@ -334,7 +334,7 @@ export default {
                         input: (val) => {
                           this.resume_j9_data[params.index].airAddMinute = val
                         }
-                      },
+                      }
                     })
                   }
                 }
@@ -361,7 +361,7 @@ export default {
                     input: (val) => {
                       this.resume_j9_data[params.index].totalTimeHour = val
                     }
-                  },
+                  }
                 })
               }
             },
@@ -380,7 +380,7 @@ export default {
                     input: (val) => {
                       this.resume_j9_data[params.index].totalTimeMinute = val
                     }
-                  },
+                  }
                 })
               }
             }
@@ -401,7 +401,7 @@ export default {
                 input: (val) => {
                   this.resume_j9_data[params.index].startTime = val
                 }
-              },
+              }
             })
           }
         },
@@ -416,31 +416,28 @@ export default {
     }
   },
 
-  created() {
+  created () {
     this.getData()
   },
 
-  mounted() {
-  },
-
   methods: {
-    getData() {
+    getData () {
       this.$get(`/plane/getResumeNineById/${this.$route.query['id']}`).then(res => {
         if (res) {
           this.resume_j9_data = res.data
         } else {
-          this.$Message.error('请求失败');
+          this.$Message.error('请求失败')
         }
       })
     },
-    deleteRecord(id) {
+    deleteRecord (id) {
       deleteResumeNine(id).then(res => {
         this.$Message.success('删除成功!')
         this.resume_j9_data = []
         this.getData()
       })
     },
-    addRecord() {
+    addRecord () {
       this.resume_j9_data.push({
         planeId: this.$route.query['id'],
         groundAllHour: null,
@@ -460,14 +457,14 @@ export default {
         startTime: null
       })
     },
-    saveRecord() {
+    saveRecord () {
       addResumeNine(this.resume_j9_data).then(res => {
         this.$Message.success('添加成功!')
         this.resume_j9_data = []
         this.getData()
       })
     },
-    addSelection() {
+    addSelection () {
       let selection = this.selectionC
 
       let groundAllHour = 0
@@ -522,10 +519,10 @@ export default {
         start_time: {key: 'startTime', value: startTime}
       }
     },
-    selectionChange(selection) {
+    selectionChange (selection) {
       this.selectionC = selection
     },
-    addGroundAir(index) {
+    addGroundAir (index) {
       let groundHour = isEmpty(this.resume_j9_data[index].groundAllHour) ? 0 : this.resume_j9_data[index].groundAllHour
       let groundMinute = isEmpty(this.resume_j9_data[index].groundAllMinute) ? 0 : this.resume_j9_data[index].groundAllMinute
       let airHour = isEmpty(this.resume_j9_data[index].airAllHour) ? 0 : this.resume_j9_data[index].airAllHour
@@ -541,8 +538,8 @@ export default {
         this.resume_j9_data[index].totalTimeMinute = oldNew % 60
       }
     },
-    handleSummary({columns, data}) {
-      return this.addSelection();
+    handleSummary ({columns, data}) {
+      return this.addSelection()
     }
   }
 }
