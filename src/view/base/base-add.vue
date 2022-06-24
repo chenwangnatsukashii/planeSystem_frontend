@@ -408,15 +408,13 @@
   </Form>
 </template>
 <style>
-input[type=text]{
-  color: red;
-}
-.ivu-input-number-input{
-  color: red;
-}
-input[readonly]{
-  color: black;
-}
+/*input[type=text]{*/
+/*  color: red;*/
+/*}*/
+/*.ivu-input-number-input{*/
+/*  color: red;*/
+/*}*/
+
 </style>
 <script>
 import {addPlane, updatePlane} from '@/http/plane_system/base'
@@ -652,7 +650,7 @@ export default {
             return h('Input', {
               props: {
                 value: params.index === 0 ? t.formValidate.engineLeftRemainingTime : t.formValidate.engineRightRemainingTime,
-                readonly: !Object.is(this.formValidate.id, null),
+                readonly: this.is_read_only,
                 size: 'small'
               },
               on: {
@@ -675,7 +673,7 @@ export default {
             return h('Input', {
               props: {
                 value: params.index === 0 ? t.formValidate.engineLeftTotalServiceLife : t.formValidate.engineRightTotalServiceLife,
-                readonly: !Object.is(this.formValidate.id, null),
+                readonly: this.is_read_only,
                 size: 'small'
               },
               on: {
@@ -720,7 +718,7 @@ export default {
             return h('Input', {
               props: {
                 value: params.index === 0 ? t.formValidate.engineLeftResidualLife : t.formValidate.engineRightResidualLife,
-                readonly: !Object.is(this.formValidate.id, null),
+                readonly: this.is_read_only,
                 size: 'small'
               },
               on: {
@@ -743,7 +741,7 @@ export default {
             return h('Input', {
               props: {
                 value: params.index === 0 ? t.formValidate.engineLeftSpStateResidualLife : t.formValidate.engineRightSpStateResidualLife,
-                readonly: !Object.is(this.formValidate.id, null),
+                readonly: this.is_read_only,
                 size: 'small'
               },
               on: {
@@ -766,7 +764,7 @@ export default {
             return h('Input', {
               props: {
                 value: params.index === 0 ? t.formValidate.engineLeftSStateResidualLife : t.formValidate.engineRightSStateResidualLife,
-                readonly: !Object.is(this.formValidate.id, null),
+                readonly: this.is_read_only,
                 size: 'small'
               },
               on: {
@@ -789,7 +787,7 @@ export default {
             return h('InputNumber', {
               props: {
                 value: params.index === 0 ? t.formValidate.engineLeftStartingRemainingLife : t.formValidate.engineRightStartingRemainingLife,
-                readonly: !Object.is(this.formValidate.id, null),
+                readonly: this.is_read_only,
                 size: 'small'
               },
               on: {
@@ -812,7 +810,7 @@ export default {
             return h('InputNumber', {
               props: {
                 value: params.index === 0 ? t.formValidate.engineLeftSpMajorCycles : t.formValidate.engineRightSpMajorCycles,
-                readonly: !Object.is(this.formValidate.id, null),
+                readonly: this.is_read_only,
                 size: 'small'
               },
               on: {
@@ -835,7 +833,7 @@ export default {
             return h('InputNumber', {
               props: {
                 value: params.index === 0 ? t.formValidate.engineLeftSMajorCycles : t.formValidate.engineRightSMajorCycles,
-                readonly: !Object.is(this.formValidate.id, null),
+                readonly: this.is_read_only,
                 size: 'small'
               },
               on: {
@@ -975,7 +973,7 @@ export default {
             return h('Input', {
               props: {
                 value: t.formValidate.engineLeftFlawDetection,
-                readonly: !Object.is(this.formValidate.id, null),
+                readonly: this.is_read_only,
                 size: 'small'
               },
               on: {
@@ -997,7 +995,7 @@ export default {
             return h('Input', {
               props: {
                 value: t.formValidate.engineLeftNextInspection,
-                readonly: !Object.is(this.formValidate.id, null),
+                readonly: this.is_read_only,
                 size: 'small'
               },
               on: {
@@ -1119,7 +1117,7 @@ export default {
             return h('Input', {
               props: {
                 value: t.formValidate.engineRightFlawDetection,
-                readonly: !Object.is(this.formValidate.id, null),
+                readonly: this.is_read_only,
                 size: 'small'
               },
               on: {
@@ -1141,7 +1139,7 @@ export default {
             return h('Input', {
               props: {
                 value: t.formValidate.engineRightNextInspection,
-                readonly: !Object.is(this.formValidate.id, null),
+                readonly: this.is_read_only,
                 size: 'small'
               },
               on: {
@@ -1206,7 +1204,7 @@ export default {
             return h('Input', {
               props: {
                 value: params.index === 0 ? t.formValidate.receiverLeftRemainingTime : t.formValidate.receiverRightRemainingTime,
-                readonly: !Object.is(this.formValidate.id, null),
+                readonly: this.is_read_only,
                 size: 'small'
               },
               on: {
@@ -1229,7 +1227,7 @@ export default {
             return h('Input', {
               props: {
                 value: params.index === 0 ? t.formValidate.receiverLeftTotalServiceLife : t.formValidate.receiverRightTotalServiceLife,
-                readonly: !Object.is(this.formValidate.id, null),
+                readonly: this.is_read_only,
                 size: 'small'
               },
               on: {
@@ -1274,7 +1272,7 @@ export default {
             return h('Input', {
               props: {
                 value: params.index === 0 ? t.formValidate.receiverLeftResidualLife : t.formValidate.receiverRightResidualLife,
-                readonly: !Object.is(this.formValidate.id, null),
+                readonly: this.is_read_only,
                 size: 'small'
               },
               on: {
@@ -1297,7 +1295,7 @@ export default {
             return h('Input', {
               props: {
                 value: params.index === 0 ? t.formValidate.receiverLeftSpStateResidualLife : t.formValidate.receiverRightSpStateResidualLife,
-                readonly: !Object.is(this.formValidate.id, null),
+                readonly: this.is_read_only,
                 size: 'small'
               },
               on: {
@@ -1320,7 +1318,7 @@ export default {
             return h('Input', {
               props: {
                 value: params.index === 0 ? t.formValidate.receiverLeftStateResidualLife : t.formValidate.receiverRightStateResidualLife,
-                readonly: !Object.is(this.formValidate.id, null),
+                readonly: this.is_read_only,
                 size: 'small'
               },
               on: {
@@ -1343,7 +1341,7 @@ export default {
             return h('InputNumber', {
               props: {
                 value: params.index === 0 ? t.formValidate.receiverLeftStartingRemainingLife : t.formValidate.receiverRightStartingRemainingLife,
-                readonly: !Object.is(this.formValidate.id, null),
+                readonly: this.is_read_only,
                 size: 'small'
               },
               on: {
@@ -1535,7 +1533,7 @@ export default {
             return h('Input', {
               props: {
                 value: params.index === 0 ? t.formValidate.starterLeftRemainingTime : t.formValidate.starterRightRemainingTime,
-                readonly: !Object.is(this.formValidate.id, null),
+                readonly: this.is_read_only,
                 size: 'small'
               },
               on: {
@@ -1558,7 +1556,7 @@ export default {
             return h('InputNumber', {
               props: {
                 value: params.index === 0 ? t.formValidate.starterLeftTotalServiceLife : t.formValidate.starterRightTotalServiceLife,
-                readonly: !Object.is(this.formValidate.id, null),
+                readonly: this.is_read_only,
                 size: 'small'
               },
               on: {
@@ -1603,7 +1601,7 @@ export default {
             return h('InputNumber', {
               props: {
                 value: params.index === 0 ? t.formValidate.starterLeftResidualLife : t.formValidate.starterRightResidualLife,
-                readonly: !Object.is(this.formValidate.id, null),
+                readonly: this.is_read_only,
                 size: 'small'
               },
               on: {
@@ -1626,7 +1624,7 @@ export default {
             return h('InputNumber', {
               props: {
                 value: params.index === 0 ? t.formValidate.starterLeftRenovations : t.formValidate.starterRightRenovations,
-                readonly: !Object.is(this.formValidate.id, null),
+                readonly: this.is_read_only,
                 size: 'small'
               },
               on: {
@@ -1821,7 +1819,7 @@ export default {
             return h('Input', {
               props: {
                 value: params.index === 0 ? t.formValidate.regulatorLeftRemainingTime : t.formValidate.regulatorRightRemainingTime,
-                readonly: !Object.is(this.formValidate.id, null),
+                readonly: this.is_read_only,
                 size: 'small'
               },
               on: {
@@ -1844,7 +1842,7 @@ export default {
             return h('Input', {
               props: {
                 value: params.index === 0 ? t.formValidate.regulatorLeftResidualLife : t.formValidate.regulatorRightResidualLife,
-                readonly: !Object.is(this.formValidate.id, null),
+                readonly: this.is_read_only,
                 size: 'small'
               },
               on: {
@@ -1906,7 +1904,7 @@ export default {
             return h('Input', {
               props: {
                 value: params.index === 0 ? t.formValidate.engineLeftTotalWorkHours : t.formValidate.engineRightTotalWorkHours,
-                readonly: !Object.is(this.formValidate.id, null),
+                // readonly: false,
                 size: 'small'
               },
               on: {
@@ -1927,9 +1925,10 @@ export default {
           align: 'center',
           render: (h, params) => {
             return h('Input', {
+              class: 'read_only',
               props: {
                 value: params.index === 0 ? t.formValidate.engineLeftLastRepairTime : t.formValidate.engineRightLastRepairTime,
-                readonly: !Object.is(this.formValidate.id, null),
+                readonly: false,
                 size: 'small'
               },
               on: {
@@ -1953,7 +1952,7 @@ export default {
             return h('DatePicker', {
               props: {
                 value: params.index === 0 ? t.formValidate.engineLeftExpirationDate : t.formValidate.engineRightExpirationDate,
-                readonly: !Object.is(this.formValidate.id, null),
+                readonly: this.is_read_only,
                 size: 'small'
               },
               on: {
@@ -1976,7 +1975,7 @@ export default {
             return h('Input', {
               props: {
                 value: params.index === 0 ? t.formValidate.engineLeftOperationalHours : t.formValidate.engineRightOperationalHours,
-                readonly: !Object.is(this.formValidate.id, null),
+                readonly: this.is_read_only,
                 size: 'small'
               },
               on: {
@@ -1999,7 +1998,7 @@ export default {
             return h('Input', {
               props: {
                 value: params.index === 0 ? t.formValidate.engineLeftMidUpHours : t.formValidate.engineRightMidUpHours,
-                readonly: !Object.is(this.formValidate.id, null),
+                readonly: this.is_read_only,
                 size: 'small'
               },
               on: {
@@ -2022,7 +2021,7 @@ export default {
             return h('Input', {
               props: {
                 value: params.index === 0 ? t.formValidate.engineLeftMidUpRestHours : t.formValidate.engineRightMidUpRestHours,
-                readonly: !Object.is(this.formValidate.id, null),
+                readonly: this.is_read_only,
                 size: 'small'
               },
               on: {
@@ -2045,7 +2044,7 @@ export default {
             return h('Input', {
               props: {
                 value: params.index === 0 ? t.formValidate.engineLeftResidualLife : t.formValidate.engineRightResidualLife,
-                readonly: !Object.is(this.formValidate.id, null),
+                readonly: this.is_read_only,
                 size: 'small'
               },
               on: {
@@ -2257,7 +2256,7 @@ export default {
             return h('Input', {
               props: {
                 value: params.index === 0 ? t.formValidate.receiverLeftTotalHours : t.formValidate.receiverRightTotalHours,
-                readonly: !Object.is(this.formValidate.id, null),
+                readonly: this.is_read_only,
                 size: 'small'
               },
               on: {
@@ -2280,7 +2279,7 @@ export default {
             return h('Input', {
               props: {
                 value: params.index === 0 ? t.formValidate.receiverLeftLastRepairTime : t.formValidate.receiverRightLastRepairTime,
-                readonly: !Object.is(this.formValidate.id, null),
+                readonly: this.is_read_only,
                 size: 'small'
               },
               on: {
@@ -2303,7 +2302,7 @@ export default {
             return h('Input', {
               props: {
                 value: params.index === 0 ? t.formValidate.receiverLeftRemainingTime : t.formValidate.receiverRightRemainingTime,
-                readonly: !Object.is(this.formValidate.id, null),
+                readonly: this.is_read_only,
                 size: 'small'
               },
               on: {
@@ -2497,7 +2496,7 @@ export default {
             return h('InputNumber', {
               props: {
                 value: params.index === 0 ? t.formValidate.starterLeftTotalServiceLife : t.formValidate.starterRightTotalServiceLife,
-                readonly: !Object.is(this.formValidate.id, null),
+                readonly: this.is_read_only,
                 size: 'small'
               },
               on: {
@@ -2520,7 +2519,7 @@ export default {
             return h('InputNumber', {
               props: {
                 value: params.index === 0 ? t.formValidate.starterLeftSpecifiedLife : t.formValidate.starterRightSpecifiedLife,
-                readonly: !Object.is(this.formValidate.id, null),
+                readonly: this.is_read_only,
                 size: 'small'
               },
               on: {
@@ -2543,7 +2542,7 @@ export default {
             return h('InputNumber', {
               props: {
                 value: params.index === 0 ? t.formValidate.starterLeftResidualLife : t.formValidate.starterRightResidualLife,
-                readonly: !Object.is(this.formValidate.id, null),
+                readonly: this.is_read_only,
                 size: 'small'
               },
               on: {
@@ -2759,7 +2758,7 @@ export default {
             return h('Input', {
               props: {
                 value: params.index === 0 ? t.formValidate.regulatorLeftRemainingTime : t.formValidate.regulatorRightRemainingTime,
-                readonly: !Object.is(this.formValidate.id, null),
+                readonly: this.is_read_only,
                 size: 'small'
               },
               on: {
@@ -2782,7 +2781,7 @@ export default {
             return h('Input', {
               props: {
                 value: params.index === 0 ? t.formValidate.regulatorLeftResidualLife : t.formValidate.regulatorRightResidualLife,
-                readonly: !Object.is(this.formValidate.id, null),
+                readonly: this.is_read_only,
                 size: 'small'
               },
               on: {
@@ -2870,7 +2869,7 @@ export default {
             return h('Input', {
               props: {
                 value: t.formValidate.engineLeftTotalServiceLife,
-                readonly: !Object.is(this.formValidate.id, null),
+                readonly: this.is_read_only,
                 size: 'small'
               },
               on: {
@@ -2925,7 +2924,7 @@ export default {
             return h('Input', {
               props: {
                 value: t.formValidate.engineLeftLastRepairTime,
-                readonly: !Object.is(this.formValidate.id, null),
+                readonly: this.is_read_only,
                 size: 'small'
               },
               on: {
@@ -3024,7 +3023,7 @@ export default {
             return h('Input', {
               props: {
                 value: t.formValidate.engineLeftRemainingTime,
-                readonly: !Object.is(this.formValidate.id, null),
+                readonly: this.is_read_only,
                 size: 'small'
               },
               on: {
@@ -3043,7 +3042,7 @@ export default {
             return h('Input', {
               props: {
                 value: t.formValidate.engineLeftTotalServiceLife,
-                readonly: !Object.is(this.formValidate.id, null),
+                readonly: this.is_read_only,
                 size: 'small'
               },
               on: {
@@ -3062,7 +3061,7 @@ export default {
             return h('Input', {
               props: {
                 value: t.formValidate.engineRemainingTime,
-                readonly: !Object.is(this.formValidate.id, null),
+                readonly: this.is_read_only,
                 size: 'small'
               },
               on: {
@@ -3117,7 +3116,7 @@ export default {
             return h('Input', {
               props: {
                 value: t.formValidate.engineLeftResidualLife,
-                readonly: !Object.is(this.formValidate.id, null),
+                readonly: this.is_read_only,
                 size: 'small'
               },
               on: {
@@ -3228,7 +3227,7 @@ export default {
             return h('InputNumber', {
               props: {
                 value: t.formValidate.airGeneratorRepairTimes,
-                readonly: !Object.is(this.formValidate.id, null),
+                readonly: this.is_read_only,
                 size: 'small'
               },
               on: {
@@ -3283,7 +3282,7 @@ export default {
             return h('InputNumber', {
               props: {
                 value: t.formValidate.airGeneratorRemainingTimes,
-                readonly: !Object.is(this.formValidate.id, null),
+                readonly: this.is_read_only,
                 size: 'small'
               },
               on: {
@@ -3331,7 +3330,10 @@ export default {
           }
         }
       ],
-      data_j8_2: [{}]
+      data_j8_2: [{}],
+
+      // is_read_only: !Object.is(this.formValidate.id, null)
+      is_read_only: false
     }
   },
 

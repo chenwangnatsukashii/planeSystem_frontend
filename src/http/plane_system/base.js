@@ -22,3 +22,6 @@ export const deleteResumeNine = id => ax.del('/plane/deleteResumeNine/' + id)
 export const addResumeEight = params => ax.post_list('/plane/addResumeEight', params)
 // 删除教8
 export const deleteResumeEight = id => ax.del('/plane/deleteResumeEight/' + id)
+
+// 首页删除飞机
+export const deleteAnyPlane = id => ax.del('/plane/deleteAnyPlane/' + id)

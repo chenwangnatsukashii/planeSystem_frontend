@@ -4,6 +4,7 @@
       <Button type="primary" shape="circle" @click="operation('baseInfo')">基本信息</Button>
       <Button style="margin-left: 10px;" type="primary" shape="circle" @click="operation('resumeInfo')">履历本</Button>
       <Button style="margin-left: 10px;" type="primary" shape="circle" @click="operation('inspection')">定期检查</Button>
+      <Button style="margin-left: 10px;" type="primary" shape="circle" @click="operation('delete')">删除</Button>
     </div>
     <div style="margin-bottom: 10px;">
       派工号：<Input clearable v-model="searchData.workNumber" placeholder="请输入派工号"
@@ -75,10 +76,10 @@
 </style>
 <script>
 
-import {addPlane} from "@/http/plane_system/base";
+import {addPlane, deleteAnyPlane, deleteResumeEight} from '@/http/plane_system/base'
 
 export default {
-  data() {
+  data () {
     return {
       tableSelect: null,
       currentChoose: '',
@@ -121,8 +122,8 @@ export default {
           width: 70,
           align: 'center',
           render: (h, params) => {
-            let id = params.row;
-            let flag = false;
+            let id = params.row
+            let flag = false
             if (this.currentChoose === id) {
               flag = true
             }
@@ -134,7 +135,7 @@ export default {
                 },
                 on: {
                   'on-change': () => {
-                    this.currentChoose = id;
+                    this.currentChoose = id
                   }
                 }
               })
@@ -177,26 +178,26 @@ export default {
   },
 
   methods: {
-    baseAdd() {
+    baseAdd () {
       this.$router.push('/base/base-add')
     },
-    searchPlane() {
-      this.$getWithParams("/plane/getAllPlanes", this.searchData).then(res => {
+    searchPlane () {
+      this.$getWithParams('/plane/getAllPlanes', this.searchData).then(res => {
         if (res) {
           this.base_data = res.data
         } else {
-          this.$Message.error('请求失败');
+          this.$Message.error('请求失败')
         }
       })
     },
-    clearSearch() {
+    clearSearch () {
       this.searchData.workNumber = ''
       this.searchData.planeType = ''
       this.searchData.unitNumber = ''
       this.searchData.planeNum = ''
       this.searchPlane()
     },
-    showBase(id) {
+    showBase (id) {
       this.$router.push({
         path: '/base/base-add',
         meta: {title: '修改', icon: 'ios-book'},
@@ -205,13 +206,13 @@ export default {
         }
       })
     },
-    showResume(id, type) {
-      let path = ""
-      if (type === "歼-11") {
+    showResume (id, type) {
+      let path = ''
+      if (type === '歼-11') {
         path = '/resume/resume-j11'
-      } else if (type === "歼-11B") {
+      } else if (type === '歼-11B') {
         path = '/resume/resume-j11b'
-      } else if (type === "歼教-9") {
+      } else if (type === '歼教-9') {
         path = '/resume/resume-j9'
       } else {
         path = '/resume/resume-j8'
@@ -223,7 +224,15 @@ export default {
         }
       })
     },
-    operation(name) {
+
+    deleteRecord (id) {
+      deleteAnyPlane(id).then(res => {
+        this.$Message.success('删除成功!')
+        this.searchPlane()
+      })
+    },
+
+    operation (name) {
       if (this.currentChoose === '') {
         this.$Message.warning('请选择飞机')
         return
@@ -232,11 +241,13 @@ export default {
         this.showBase(this.currentChoose.id)
       } else if (name === 'resumeInfo') {
         this.showResume(this.currentChoose.id, this.currentChoose.planeType)
+      } else if (name === 'delete') {
+        this.deleteRecord(this.currentChoose.id)
       } else {
         this.$Message.warning('定期检查功能还未上线')
       }
     },
-    ok() {
+    ok () {
       this.$refs['newData'].validate((valid) => {
         if (valid) {
           addPlane(this.newData).then(res => {
@@ -247,16 +258,16 @@ export default {
           })
         } else {
           setTimeout(() => {
-            this.loading = false;
+            this.loading = false
             this.$nextTick(() => {
               this.loading = true
-            });
-          }, 1000);
+            })
+          }, 1000)
           this.$Message.error('非空字段不能为空!')
         }
       })
     },
-    cancel() {
+    cancel () {
       this.$refs['newData'].resetFields()
     }
   }

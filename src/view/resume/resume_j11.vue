@@ -69,10 +69,26 @@
         <Icon type="ios-arrow-down"></Icon>
       </Button>
       <DropdownMenu slot="list">
-        <DropdownItem name="type1">第一种</DropdownItem>
-        <DropdownItem name="type2">第二种</DropdownItem>
-        <DropdownItem name="type3">第三种</DropdownItem>
-        <DropdownItem name="type4">第四种</DropdownItem>
+        <DropdownItem name="type1">
+          <Poptip trigger="hover" placement="left" content="除五四舍五入">
+            <Button>第一种</Button>
+          </Poptip>
+        </DropdownItem>
+        <DropdownItem name="type2">
+          <Poptip trigger="hover" placement="left" content="右上角余数">
+            <Button>第二种</Button>
+          </Poptip>
+        </DropdownItem>
+        <DropdownItem name="type3">
+          <Poptip trigger="hover" placement="left" content="取整法">
+            <Button>第三种</Button>
+          </Poptip>
+        </DropdownItem>
+        <DropdownItem name="type4">
+          <Poptip trigger="hover" placement="left" content="精确到分钟">
+            <Button>第四种</Button>
+          </Poptip>
+        </DropdownItem>
       </DropdownMenu>
     </Dropdown>
     <Button type="primary" style="margin-right: 5px;" shape="circle" slot="extra" @click="addRecord">添加</Button>
@@ -88,9 +104,8 @@
 <script>
 import {addResume, deleteResume, addResumeEngine} from '@/http/plane_system/base'
 import {addTime} from './addTime'
-import {minusTime} from './minusTime'
 import {isEmpty} from '@/view/resume/isEmpty'
-import {toMin, toMax} from './timeOperation'
+import {toMin, toMax, hms, hm} from './timeOperation'
 import _ from 'lodash'
 
 export default {
@@ -99,9 +114,9 @@ export default {
       type: 'engine_left',
       adjustOld: 0,
       adjustNew: 0,
-      typeName: '选择方式',
+      typeName: '计算方式',
       selectionC: null,
-      formatZTGZ: 'HH:mm:ss',
+      formatZTGZ: hms,
       formulaType: '',
 
       engine_columns: [
@@ -121,7 +136,8 @@ export default {
             return h('DatePicker', {
               props: {
                 value: this.engine_data[params.index].engineDate,
-                size: 'small'
+                size: 'small',
+                placement: 'right'
               },
               on: {
                 'on-change': (val) => {
@@ -150,8 +166,15 @@ export default {
           }
         },
         {
-          title: '发动机地面和飞行工作持续时间 （h,min）',
           align: 'center',
+          renderHeader: (h, params) => {
+            let text = '发动机地面和飞行工作持续时间<br/>（h,min）'
+            return h('div', {
+              domProps: {
+                innerHTML: text
+              }
+            })
+          },
           children: [
             {
               title: '状态',
@@ -168,18 +191,24 @@ export default {
                           float: 'right'
                         },
                         props: {
+                          type: 'info',
                           count: Object.is(this.engine_data[params.index].leftMod, undefined) ? 0 : this.engine_data[params.index].leftMod
                         }
                       }),
                       h('TimePicker', {
                         props: {
                           value: this.engine_data[params.index].engineSGroundFlight,
-                          format: 'HH:mm',
+                          format: hm,
                           size: 'small'
                         },
                         on: {
                           input: (val) => {
                             this.engine_data[params.index].engineSGroundFlight = val
+                            if (this.formulaType === 'type1' || this.formulaType === 'type4') {
+                              this.sGFAndUpdate(params.index)
+                            } else if (this.formulaType === 'type2') {
+                              this.sGFAndUpdateFor2(params.index)
+                            }
                           }
                         }
                       })
@@ -197,18 +226,24 @@ export default {
                           float: 'right'
                         },
                         props: {
+                          type: 'info',
                           count: Object.is(this.engine_data[params.index].rightMod, undefined) ? 0 : this.engine_data[params.index].rightMod
                         }
                       }),
                       h('TimePicker', {
                         props: {
                           value: this.engine_data[params.index].engineSpGroundFlight,
-                          format: 'HH:mm',
+                          format: hm,
                           size: 'small'
                         },
                         on: {
                           input: (val) => {
                             this.engine_data[params.index].engineSpGroundFlight = val
+                            if (this.formulaType === 'type1' || this.formulaType === 'type4') {
+                              this.spGFAndUpdate(params.index)
+                            } else if (this.formulaType === 'type2') {
+                              this.spGFAndUpdateFor2(params.index)
+                            }
                           }
                         }
                       })
@@ -235,12 +270,15 @@ export default {
                     return h('TimePicker', {
                       props: {
                         value: this.engine_data[params.index].engineSFlight,
-                        format: 'HH:mm',
+                        format: hm,
                         size: 'small'
                       },
                       on: {
                         input: (val) => {
                           this.engine_data[params.index].engineSFlight = val
+                          if (this.formulaType === 'type1' || this.formulaType === 'type4') {
+                            this.sGFAndUpdate(params.index)
+                          }
                         }
                       }
                     })
@@ -254,12 +292,15 @@ export default {
                     return h('TimePicker', {
                       props: {
                         value: this.engine_data[params.index].engineSpFlight,
-                        format: 'HH:mm',
+                        format: hm,
                         size: 'small'
                       },
                       on: {
                         input: (val) => {
                           this.engine_data[params.index].engineSpFlight = val
+                          if (this.formulaType === 'type1' || this.formulaType === 'type4') {
+                            this.spGFAndUpdate(params.index)
+                          }
                         }
                       }
                     })
@@ -270,11 +311,9 @@ export default {
           ]
         },
         {
-          type: 'html',
-          title: '',
           align: 'center',
           renderHeader: (h, params) => {
-            let text = '发动机м+ф状态工作累计（地面м+ф状态工作按100％考虑）<br/>（h,min,s）'
+            let text = '发动机м+ф状态工作累计<br/>（地面м+ф状态工作按100％考虑）<br/>（h,min,s）'
             return h('div', {
               domProps: {
                 innerHTML: text
@@ -299,12 +338,10 @@ export default {
                         size: 'small'
                       },
                       on: {
+                        // 如果值的变化需要动态计算
                         input: (val) => {
                           this.engine_data[params.index].engineSStateWork = val
-                          // 如果值的变化需要动态计算
-                          if (this.formatZTGZ === 'HH:mm:ss') {
-                            this.engine_data[params.index].engineSpStateWork = toMax(toMin(val) + toMin(this.engine_data[params.index].engineYsStateWork), 'hhmmss')
-                          }
+                          this.engine_data[params.index].engineSpStateWork = toMax(toMin(val) + toMin(this.engine_data[params.index].engineYsStateWork), this.formatZTGZ)
                         }
                       }
                     })
@@ -323,12 +360,10 @@ export default {
                         size: 'small'
                       },
                       on: {
+                        // 如果值的变化需要动态计算
                         input: (val) => {
                           this.engine_data[params.index].engineYsStateWork = val
-                          // 如果值的变化需要动态计算
-                          if (this.formatZTGZ === 'HH:mm:ss') {
-                            this.engine_data[params.index].engineSpStateWork = toMax(toMin(val) + toMin(this.engine_data[params.index].engineSStateWork), 'hhmmss')
-                          }
+                          this.engine_data[params.index].engineSpStateWork = toMax(toMin(val) + toMin(this.engine_data[params.index].engineSStateWork), this.formatZTGZ)
                         }
                       }
                     })
@@ -359,8 +394,16 @@ export default {
           ]
         },
         {
-          title: '发动机全部状态工作累计（地面工作按20％考虑）（h,min）',
           align: 'center',
+          renderHeader: (h, params) => {
+            let text = '发动机全部状态工作累计<br/>（地面工作按20％考虑）<br/>（h,min）'
+            return h('div', {
+              domProps: {
+                innerHTML: text
+              }
+            })
+          },
+          title: '',
           children: [
             {
               title: '状态',
@@ -374,13 +417,8 @@ export default {
                     return h('TimePicker', {
                       props: {
                         value: this.engine_data[params.index].engineSAllStateWork,
-                        format: 'HH:mm',
+                        format: hm,
                         size: 'small'
-                      },
-                      on: {
-                        input: (val) => {
-                          this.engine_data[params.index].engineSAllStateWork = val
-                        }
                       }
                     })
                   }
@@ -393,13 +431,8 @@ export default {
                     return h('TimePicker', {
                       props: {
                         value: this.engine_data[params.index].engineSpAllStateWork,
-                        format: 'HH:mm',
+                        format: hm,
                         size: 'small'
-                      },
-                      on: {
-                        input: (val) => {
-                          this.engine_data[params.index].engineSpAllStateWork = val
-                        }
                       }
                     })
                   }
@@ -531,7 +564,8 @@ export default {
             return h('DatePicker', {
               props: {
                 value: this.engine_data_below[params.index].engineDate,
-                size: 'small'
+                size: 'small',
+                placement: 'top'
               },
               on: {
                 'on-change': (val) => {
@@ -584,8 +618,9 @@ export default {
                       h('TimePicker', {
                         props: {
                           value: this.engine_data_below[params.index].engineSGroundFlight,
-                          format: 'HH:mm',
-                          size: 'small'
+                          format: hm,
+                          size: 'small',
+                          placement: 'top'
                         },
                         on: {
                           input: (val) => {
@@ -613,8 +648,9 @@ export default {
                       h('TimePicker', {
                         props: {
                           value: this.engine_data_below[params.index].engineSpGroundFlight,
-                          format: 'HH:mm',
-                          size: 'small'
+                          format: hm,
+                          size: 'small',
+                          placement: 'top'
                         },
                         on: {
                           input: (val) => {
@@ -645,8 +681,9 @@ export default {
                     return h('TimePicker', {
                       props: {
                         value: this.engine_data_below[params.index].engineSFlight,
-                        format: 'HH:mm',
-                        size: 'small'
+                        format: hm,
+                        size: 'small',
+                        placement: 'top'
                       },
                       on: {
                         input: (val) => {
@@ -664,8 +701,9 @@ export default {
                     return h('TimePicker', {
                       props: {
                         value: this.engine_data_below[params.index].engineSpFlight,
-                        format: 'HH:mm',
-                        size: 'small'
+                        format: hm,
+                        size: 'small',
+                        placement: 'top'
                       },
                       on: {
                         input: (val) => {
@@ -680,11 +718,9 @@ export default {
           ]
         },
         {
-          type: 'html',
-          title: '',
           align: 'center',
           renderHeader: (h, params) => {
-            let text = '发动机м+ф状态工作累计（地面м+ф状态工作按100％考虑）<br/>（h,min,s）'
+            let text = '发动机м+ф状态工作累计<br/>（地面м+ф状态工作按100％考虑）<br/>（h,min,s）'
             return h('div', {
               domProps: {
                 innerHTML: text
@@ -706,13 +742,14 @@ export default {
                       props: {
                         value: this.engine_data_below[params.index].engineSStateWork,
                         format: this.formatZTGZ,
-                        size: 'small'
+                        size: 'small',
+                        placement: 'top'
                       },
                       on: {
                         input: (val) => {
                           this.engine_data_below[params.index].engineSStateWork = val
                           // 如果值的变化需要动态计算
-                          if (this.formatZTGZ === 'HH:mm:ss') {
+                          if (this.formatZTGZ === hms) {
                             this.engine_data_below[params.index].engineSpStateWork = toMax(toMin(val) + toMin(this.engine_data_below[params.index].engineYsStateWork), 'hhmmss')
                           }
                         }
@@ -730,13 +767,14 @@ export default {
                       props: {
                         value: this.engine_data_below[params.index].engineYsStateWork,
                         format: this.formatZTGZ,
-                        size: 'small'
+                        size: 'small',
+                        placement: 'top'
                       },
                       on: {
                         input: (val) => {
                           this.engine_data_below[params.index].engineYsStateWork = val
                           // 如果值的变化需要动态计算
-                          if (this.formatZTGZ === 'HH:mm:ss') {
+                          if (this.formatZTGZ === hms) {
                             this.engine_data_below[params.index].engineSpStateWork = toMax(toMin(val) + toMin(this.engine_data_below[params.index].engineSStateWork), 'hhmmss')
                           }
                         }
@@ -754,7 +792,8 @@ export default {
                       props: {
                         value: this.engine_data_below[params.index].engineSpStateWork,
                         format: this.formatZTGZ,
-                        size: 'small'
+                        size: 'small',
+                        placement: 'top'
                       },
                       on: {
                         input: (val) => {
@@ -784,8 +823,9 @@ export default {
                     return h('TimePicker', {
                       props: {
                         value: this.engine_data_below[params.index].engineSAllStateWork,
-                        format: 'HH:mm',
-                        size: 'small'
+                        format: hm,
+                        size: 'small',
+                        placement: 'top'
                       },
                       on: {
                         input: (val) => {
@@ -803,8 +843,9 @@ export default {
                     return h('TimePicker', {
                       props: {
                         value: this.engine_data_below[params.index].engineSpAllStateWork,
-                        format: 'HH:mm',
-                        size: 'small'
+                        format: hm,
+                        size: 'small',
+                        placement: 'top'
                       },
                       on: {
                         input: (val) => {
@@ -940,7 +981,7 @@ export default {
                     return h('TimePicker', {
                       props: {
                         value: this.receiver_data[params.index].receiverSGroundFlight,
-                        format: 'HH:mm',
+                        format: hm,
                         size: 'small'
                       },
                       on: {
@@ -959,7 +1000,7 @@ export default {
                     return h('TimePicker', {
                       props: {
                         value: this.receiver_data[params.index].receiverSpGroundFlight,
-                        format: 'HH:mm',
+                        format: hm,
                         size: 'small'
                       },
                       on: {
@@ -990,7 +1031,7 @@ export default {
                     return h('TimePicker', {
                       props: {
                         value: this.receiver_data[params.index].receiverSFlight,
-                        format: 'HH:mm',
+                        format: hm,
                         size: 'small'
                       },
                       on: {
@@ -1009,7 +1050,7 @@ export default {
                     return h('TimePicker', {
                       props: {
                         value: this.receiver_data[params.index].receiverSpFlight,
-                        format: 'HH:mm',
+                        format: hm,
                         size: 'small'
                       },
                       on: {
@@ -1106,7 +1147,7 @@ export default {
                     return h('TimePicker', {
                       props: {
                         value: this.receiver_data[params.index].receiverSAllStateWork,
-                        format: 'HH:mm',
+                        format: hm,
                         size: 'small'
                       },
                       on: {
@@ -1125,7 +1166,7 @@ export default {
                     return h('TimePicker', {
                       props: {
                         value: this.receiver_data[params.index].receiverSpAllStateWork,
-                        format: 'HH:mm',
+                        format: hm,
                         size: 'small'
                       },
                       on: {
@@ -1352,6 +1393,7 @@ export default {
         })
       }
     },
+
     addBelow () {
       this.engine_data_below.push({
         type: this.type === 'engine_left' ? 'left' : 'right',
@@ -1361,10 +1403,13 @@ export default {
         engineSpStateWork: ''
       })
     },
+
     deleteBelow (index) {
       this.engine_data_below.splice(index, 1)
       this.$Message.success('删除成功!')
     },
+
+    // 小表格保存并清空
     saveAndClean () {
       for (let i = 0; i < this.engine_data.length; i++) {
         for (let j = 0; j < this.engine_data_below.length; j++) {
@@ -1374,9 +1419,9 @@ export default {
             this.engine_data[i].engineSpGroundFlight = toMax(toMin(this.engine_data[i].engineSpGroundFlight) + toMin(this.engine_data_below[j].engineSpGroundFlight))
             this.engine_data[i].engineSFlight = toMax(toMin(this.engine_data[i].engineSFlight) + toMin(this.engine_data_below[j].engineSFlight))
             this.engine_data[i].engineSpFlight = toMax(toMin(this.engine_data[i].engineSpFlight) + toMin(this.engine_data_below[j].engineSpFlight))
-            this.engine_data[i].engineSStateWork = toMax(toMin(this.engine_data[i].engineSStateWork) + toMin(this.engine_data_below[j].engineSStateWork), 'hhmmss')
-            this.engine_data[i].engineYsStateWork = toMax(toMin(this.engine_data[i].engineYsStateWork) + toMin(this.engine_data_below[j].engineYsStateWork), 'hhmmss')
-            this.engine_data[i].engineSpStateWork = toMax(toMin(this.engine_data[i].engineSpStateWork) + toMin(this.engine_data_below[j].engineSpStateWork), 'hhmmss')
+            this.engine_data[i].engineSStateWork = toMax(toMin(this.engine_data[i].engineSStateWork) + toMin(this.engine_data_below[j].engineSStateWork), hms)
+            this.engine_data[i].engineYsStateWork = toMax(toMin(this.engine_data[i].engineYsStateWork) + toMin(this.engine_data_below[j].engineYsStateWork), hms)
+            this.engine_data[i].engineSpStateWork = toMax(toMin(this.engine_data[i].engineSpStateWork) + toMin(this.engine_data_below[j].engineSpStateWork), hms)
 
             if (this.formulaType === 'type3') {
               let san1 = toMin(this.engine_data_below[j].engineSGroundFlight)
@@ -1469,82 +1514,41 @@ export default {
           if (type === 'type1' || type === 'type4') {
             if (type === 'type4') {
               this.typeName = '第四种'
+              this.formatZTGZ = hm
               for (let i = 0; i < this.engine_data_tmp.length; i++) {
                 let timeSplit1 = this.engine_data_tmp[i].engineSStateWork.split(':')
                 let timeSplit2 = this.engine_data_tmp[i].engineYsStateWork.split(':')
-                let timeSplit3 = this.engine_data_tmp[i].engineSpStateWork.split(':')
-                if (parseInt(timeSplit1[2]) < 30) {
-                  this.engine_data_tmp[i].engineSStateWork = timeSplit1[0] + ':' + timeSplit1[1]
-                } else {
-                  this.engine_data_tmp[i].engineSStateWork = toMax(toMin(timeSplit1[0] + ':' + timeSplit1[1]), '00:01')
-                }
-
-                if (parseInt(timeSplit2[2]) < 30) {
-                  this.engine_data_tmp[i].engineYsStateWork = timeSplit2[0] + ':' + timeSplit2[1]
-                } else {
-                  this.engine_data_tmp[i].engineYsStateWork = toMax(toMin(timeSplit2[0] + ':' + timeSplit2[1]), '00:01')
-                }
-
-                if (parseInt(timeSplit3[2]) < 30) {
-                  this.engine_data_tmp[i].engineSpStateWork = timeSplit3[0] + ':' + timeSplit3[1]
-                } else {
-                  this.engine_data_tmp[i].engineSpStateWork = toMax(toMin(timeSplit3[0] + ':' + timeSplit3[1]), '00:01')
-                }
+                this.engine_data_tmp[i].engineSStateWork = timeSplit1[0] + ':' + timeSplit1[1]
+                this.engine_data_tmp[i].engineYsStateWork = timeSplit2[0] + ':' + timeSplit2[1]
+                this.engine_data_tmp[i].engineSpStateWork = toMax(toMin(this.engine_data_tmp[i].engineSStateWork) + toMin(this.engine_data_tmp[i].engineYsStateWork), hm)
               }
-              this.formatZTGZ = 'HH:mm'
             } else if (type === 'type1') {
               this.typeName = '第一种'
-              this.formatZTGZ = 'HH:mm:ss'
+              this.formatZTGZ = hms
             }
 
             for (let i = 0; i < this.engine_data_tmp.length; i++) {
               if (i === 0) {
-                this.engine_data_tmp[i].engineSAllStateWork = addTime(minusTime(this.engine_data_tmp[i].engineSGroundFlight,
-                  this.engine_data_tmp[i].engineSFlight, 5), this.engine_data_tmp[i].engineSFlight, 'hhmm')
-
-                this.engine_data_tmp[i].engineSpAllStateWork = addTime(minusTime(this.engine_data_tmp[i].engineSpGroundFlight,
-                  this.engine_data_tmp[i].engineSpFlight, 5), this.engine_data_tmp[i].engineSpFlight, 'hhmm')
+                this.engine_data_tmp[i].engineSAllStateWork = toMax(Math.round((toMin(this.engine_data_tmp[i].engineSGroundFlight) - toMin(this.engine_data_tmp[i].engineSFlight)) / 5) +
+                  toMin(this.engine_data_tmp[i].engineSFlight), hm)
+                this.engine_data_tmp[i].engineSpAllStateWork = toMax(Math.round((toMin(this.engine_data_tmp[i].engineSpGroundFlight) - toMin(this.engine_data_tmp[i].engineSpFlight)) / 5) +
+                  toMin(this.engine_data_tmp[i].engineSpFlight), hm)
               } else {
-                this.engine_data_tmp[i].engineSAllStateWork = addTime(addTime(minusTime(this.engine_data_tmp[i].engineSGroundFlight,
-                  this.engine_data_tmp[i].engineSFlight, 5), this.engine_data_tmp[i].engineSFlight, 'hhmm'),
-                this.engine_data_tmp[i - 1].engineSAllStateWork, 'hhmm')
-
-                this.engine_data_tmp[i].engineSpAllStateWork = addTime(addTime(minusTime(this.engine_data_tmp[i].engineSpGroundFlight,
-                  this.engine_data_tmp[i].engineSpFlight, 5), this.engine_data_tmp[i].engineSpFlight, 'hhmm'),
-                this.engine_data_tmp[i - 1].engineSpAllStateWork, 'hhmm')
+                this.engine_data_tmp[i].engineSAllStateWork = toMax(Math.round((toMin(this.engine_data_tmp[i].engineSGroundFlight) - toMin(this.engine_data_tmp[i].engineSFlight)) / 5) +
+                  toMin(this.engine_data_tmp[i].engineSFlight) + toMin(this.engine_data_tmp[i - 1].engineSAllStateWork), hm)
+                this.engine_data_tmp[i].engineSpAllStateWork = toMax(Math.round((toMin(this.engine_data_tmp[i].engineSpGroundFlight) - toMin(this.engine_data_tmp[i].engineSpFlight)) / 5) +
+                  toMin(this.engine_data_tmp[i].engineSpFlight) + toMin(this.engine_data_tmp[i - 1].engineSpAllStateWork), hm)
               }
             }
 
             this.engine_data = this.engine_data_tmp
           } else if (type === 'type2') {
             this.typeName = '第二种'
-            this.engine_data_tmp = _.cloneDeep(this.engine_data)
 
-            for (let i = 0; i < this.engine_data_tmp.length; i++) {
-              let minSGF = toMin(this.engine_data_tmp[i].engineSGroundFlight)
-              let minSF = toMin(this.engine_data_tmp[i].engineSFlight)
-              let minSpGF = toMin(this.engine_data_tmp[i].engineSpGroundFlight)
-              let minSpF = toMin(this.engine_data_tmp[i].engineSpFlight)
-              if (i === 0) {
-                this.engine_data_tmp[i].leftMod = (minSGF - minSF) % 5
-                this.engine_data_tmp[i].engineSAllStateWork = toMax(Math.floor((minSGF - minSF) / 5) + minSF)
-
-                this.engine_data_tmp[i].rightMod = (minSpGF - minSpF) % 5
-                this.engine_data_tmp[i].engineSpAllStateWork = toMax(Math.floor((minSpGF - minSpF) / 5) + minSpF)
-              } else {
-                let lo = minSGF - minSF + this.engine_data_tmp[i - 1].leftMod
-                this.engine_data_tmp[i].leftMod = lo % 5
-                this.engine_data_tmp[i].engineSAllStateWork = toMax(Math.floor(lo / 5) + minSF +
-                  toMin(this.engine_data_tmp[i - 1].engineSAllStateWork))
-
-                let ro = minSpGF - minSpF + this.engine_data_tmp[i - 1].rightMod
-                this.engine_data_tmp[i].rightMod = ro % 5
-                this.engine_data_tmp[i].engineSpAllStateWork = toMax(Math.floor(ro / 5) + minSpF +
-                  toMin(this.engine_data_tmp[i - 1].engineSpAllStateWork))
-              }
+            for (let i = 0; i < this.engine_data.length; i++) {
+              this.sGroundFlightChangeFor2(i)
+              this.spGroundFlightChangeFor2(i)
             }
-
-            this.engine_data = this.engine_data_tmp
           } else if (type === 'type3') {
             this.typeName = '第三种'
           }
@@ -1654,12 +1658,108 @@ export default {
         receiver_sp_all_state_work: {key: 'receiverSpAllStateWork', value: receiverSpAllStateWork}
       }
     },
+
     engineSummary ({columns, data}) {
       return this.addSelection()
     },
+
     receiverSummary ({columns, data}) {
       return this.addReceiver()
+    },
+
+    // 发动机地面和飞行工作持续时间, 十=（三-五）/5+五+上次十
+    sGFAndUpdate (i) {
+      let oldValue = toMin(this.engine_data[i].engineSAllStateWork)
+      this.sGroundFlightChange(i)
+      let newValue = toMin(this.engine_data[i].engineSAllStateWork)
+      this.updateOtherS(i, newValue - oldValue)
+    },
+
+    spGFAndUpdate (i) {
+      let oldValue = toMin(this.engine_data[i].engineSpAllStateWork)
+      this.spGroundFlightChange(i)
+      let newValue = toMin(this.engine_data[i].engineSpAllStateWork)
+      this.updateOtherSp(i, newValue - oldValue)
+    },
+
+    sGroundFlightChange (i) {
+      if (i === 0) {
+        this.engine_data[i].engineSAllStateWork = toMax(Math.round((toMin(this.engine_data[i].engineSGroundFlight) - toMin(this.engine_data[i].engineSFlight)) / 5) +
+          toMin(this.engine_data[i].engineSFlight), hm)
+      } else {
+        this.engine_data[i].engineSAllStateWork = toMax(Math.round((toMin(this.engine_data[i].engineSGroundFlight) - toMin(this.engine_data[i].engineSFlight)) / 5) +
+          toMin(this.engine_data[i].engineSFlight) + toMin(this.engine_data[i - 1].engineSAllStateWork), hm)
+      }
+    },
+
+    spGroundFlightChange (i) {
+      if (i === 0) {
+        this.engine_data_tmp[i].engineSpAllStateWork = toMax(Math.round((toMin(this.engine_data_tmp[i].engineSpGroundFlight) - toMin(this.engine_data_tmp[i].engineSpFlight)) / 5) +
+          toMin(this.engine_data_tmp[i].engineSpFlight), hm)
+      } else {
+        this.engine_data_tmp[i].engineSpAllStateWork = toMax(Math.round((toMin(this.engine_data_tmp[i].engineSpGroundFlight) - toMin(this.engine_data_tmp[i].engineSpFlight)) / 5) +
+          toMin(this.engine_data_tmp[i].engineSpFlight) + toMin(this.engine_data_tmp[i - 1].engineSpAllStateWork), hm)
+      }
+    },
+
+    updateOtherS (i, value) {
+      if (i !== this.engine_data.length - 1) {
+        for (let j = i + 1; j < this.engine_data.length; j++) {
+          this.engine_data[j].engineSAllStateWork = toMax(toMin(this.engine_data[j].engineSAllStateWork) + value, hm)
+        }
+      }
+    },
+
+    updateOtherSp (i, value) {
+      if (i !== this.engine_data.length - 1) {
+        for (let j = i + 1; j < this.engine_data.length; j++) {
+          this.engine_data[j].engineSpAllStateWork = toMax(toMin(this.engine_data[j].engineSpAllStateWork) + value, hm)
+        }
+      }
+    },
+
+    sGFAndUpdateFor2 (i) {
+      let oldValue = toMin(this.engine_data[i].engineSAllStateWork)
+      this.sGroundFlightChangeFor2(i)
+      let newValue = toMin(this.engine_data[i].engineSAllStateWork)
+      this.updateOtherS(i, newValue - oldValue)
+    },
+
+    sGroundFlightChangeFor2 (i) {
+      let minSGF = toMin(this.engine_data[i].engineSGroundFlight)
+      let minSF = toMin(this.engine_data[i].engineSFlight)
+      if (i === 0) {
+        this.engine_data[i].leftMod = (minSGF - minSF) % 5
+        this.engine_data[i].engineSAllStateWork = toMax(Math.floor((minSGF - minSF) / 5) + minSF)
+      } else {
+        let lo = minSGF - minSF + this.engine_data[i - 1].leftMod
+        this.engine_data[i].leftMod = lo % 5
+        this.engine_data[i].engineSAllStateWork = toMax(Math.floor(lo / 5) + minSF +
+          toMin(this.engine_data[i - 1].engineSAllStateWork))
+      }
+    },
+
+    spGFAndUpdateFor2 (i) {
+      let oldValue = toMin(this.engine_data[i].engineSpAllStateWork)
+      this.spGroundFlightChangeFor2(i)
+      let newValue = toMin(this.engine_data[i].engineSpAllStateWork)
+      this.updateOtherSp(i, newValue - oldValue)
+    },
+
+    spGroundFlightChangeFor2 (i) {
+      let minSGF = toMin(this.engine_data[i].engineSpGroundFlight)
+      let minSF = toMin(this.engine_data[i].engineSpFlight)
+      if (i === 0) {
+        this.engine_data[i].rightMod = (minSGF - minSF) % 5
+        this.engine_data[i].engineSpAllStateWork = toMax(Math.floor((minSGF - minSF) / 5) + minSF)
+      } else {
+        let lo = minSGF - minSF + this.engine_data[i - 1].rightMod
+        this.engine_data[i].rightMod = lo % 5
+        this.engine_data[i].engineSpAllStateWork = toMax(Math.floor(lo / 5) + minSF +
+          toMin(this.engine_data[i - 1].engineSpAllStateWork))
+      }
     }
+
   }
 }
 </script>
