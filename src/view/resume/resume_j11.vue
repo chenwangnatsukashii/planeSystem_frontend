@@ -1463,7 +1463,7 @@ export default {
         } else {
           l_data += 1
           items[date_below] = l_data - 1
-          this.engine_data.push(this.engine_data_below)
+          this.engine_data.push(this.engine_data_below[j])
         }
       }
 
