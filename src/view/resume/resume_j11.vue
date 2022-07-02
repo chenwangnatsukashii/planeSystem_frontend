@@ -1411,49 +1411,59 @@ export default {
 
     // 小表格保存并清空
     saveAndClean () {
-      for (let i = 0; i < this.engine_data.length; i++) {
-        for (let j = 0; j < this.engine_data_below.length; j++) {
-          if (this.engine_data[i].engineDate === this.engine_data_below[j].engineDate) {
-            this.engine_data[i].engineStartTimes += this.engine_data_below[j].engineStartTimes
-            this.engine_data[i].engineSGroundFlight = toMax(toMin(this.engine_data[i].engineSGroundFlight) + toMin(this.engine_data_below[j].engineSGroundFlight))
-            this.engine_data[i].engineSpGroundFlight = toMax(toMin(this.engine_data[i].engineSpGroundFlight) + toMin(this.engine_data_below[j].engineSpGroundFlight))
-            this.engine_data[i].engineSFlight = toMax(toMin(this.engine_data[i].engineSFlight) + toMin(this.engine_data_below[j].engineSFlight))
-            this.engine_data[i].engineSpFlight = toMax(toMin(this.engine_data[i].engineSpFlight) + toMin(this.engine_data_below[j].engineSpFlight))
-            this.engine_data[i].engineSStateWork = toMax(toMin(this.engine_data[i].engineSStateWork) + toMin(this.engine_data_below[j].engineSStateWork), hms)
-            this.engine_data[i].engineYsStateWork = toMax(toMin(this.engine_data[i].engineYsStateWork) + toMin(this.engine_data_below[j].engineYsStateWork), hms)
-            this.engine_data[i].engineSpStateWork = toMax(toMin(this.engine_data[i].engineSpStateWork) + toMin(this.engine_data_below[j].engineSpStateWork), hms)
+      let items = {}
+      let l_data = this.engine_data.length
+      for (let i = 0; i < l_data; i++) {
+        items[this.engine_data[i].engineDate] = i
+      }
 
-            if (this.formulaType === 'type3') {
-              let san1 = toMin(this.engine_data_below[j].engineSGroundFlight)
-              let wu1 = toMin(this.engine_data_below[j].engineSFlight)
-              let yuShu1 = (san1 - wu1) % 5
-              let san2 = toMin(this.engine_data_below[j].engineSpGroundFlight)
-              let wu2 = toMin(this.engine_data_below[j].engineSpFlight)
-              let yuShu2 = (san2 - wu2) % 5
+      for (let j = 0; j < this.engine_data_below.length; j++) {
+        let date_below = this.engine_data_below[j].engineDate
+        if (items.hasOwnProperty(date_below)) {
+          let i = items[date_below]
+          this.engine_data[i].engineStartTimes += this.engine_data_below[j].engineStartTimes
+          this.engine_data[i].engineSGroundFlight = toMax(toMin(this.engine_data[i].engineSGroundFlight) + toMin(this.engine_data_below[j].engineSGroundFlight))
+          this.engine_data[i].engineSpGroundFlight = toMax(toMin(this.engine_data[i].engineSpGroundFlight) + toMin(this.engine_data_below[j].engineSpGroundFlight))
+          this.engine_data[i].engineSFlight = toMax(toMin(this.engine_data[i].engineSFlight) + toMin(this.engine_data_below[j].engineSFlight))
+          this.engine_data[i].engineSpFlight = toMax(toMin(this.engine_data[i].engineSpFlight) + toMin(this.engine_data_below[j].engineSpFlight))
+          this.engine_data[i].engineSStateWork = toMax(toMin(this.engine_data[i].engineSStateWork) + toMin(this.engine_data_below[j].engineSStateWork), hms)
+          this.engine_data[i].engineYsStateWork = toMax(toMin(this.engine_data[i].engineYsStateWork) + toMin(this.engine_data_below[j].engineYsStateWork), hms)
+          this.engine_data[i].engineSpStateWork = toMax(toMin(this.engine_data[i].engineSpStateWork) + toMin(this.engine_data_below[j].engineSpStateWork), hms)
 
-              if (yuShu1 === 0) {
-                this.engine_data[i].engineSAllStateWork = toMax(toMin(this.engine_data[i].engineSAllStateWork) + (san1 - wu1) / 5)
-              } else if (yuShu1 < 3) {
-                this.engine_data[i].engineSAllStateWork = toMax(toMin(this.engine_data[i].engineSAllStateWork) + Math.floor((san1 - wu1) / 5))
-              } else {
-                this.engine_data[i].engineSAllStateWork = toMax(toMin(this.engine_data[i].engineSAllStateWork) + Math.ceil((san1 - wu1) / 5))
-              }
+          if (this.formulaType === 'type3') {
+            let san1 = toMin(this.engine_data_below[j].engineSGroundFlight)
+            let wu1 = toMin(this.engine_data_below[j].engineSFlight)
+            let yuShu1 = (san1 - wu1) % 5
+            let san2 = toMin(this.engine_data_below[j].engineSpGroundFlight)
+            let wu2 = toMin(this.engine_data_below[j].engineSpFlight)
+            let yuShu2 = (san2 - wu2) % 5
 
-              if (yuShu2 === 0) {
-                this.engine_data[i].engineSpAllStateWork = toMax(toMin(this.engine_data[i].engineSpAllStateWork) + (san1 - wu1) / 5)
-              } else if (yuShu2 < 3) {
-                this.engine_data[i].engineSpAllStateWork = toMax(toMin(this.engine_data[i].engineSpAllStateWork) + Math.floor((san1 - wu1) / 5))
-              } else {
-                this.engine_data[i].engineSpAllStateWork = toMax(toMin(this.engine_data[i].engineSpAllStateWork) + Math.ceil((san1 - wu1) / 5))
-              }
+            if (yuShu1 === 0) {
+              this.engine_data[i].engineSAllStateWork = toMax(toMin(this.engine_data[i].engineSAllStateWork) + (san1 - wu1) / 5)
+            } else if (yuShu1 < 3) {
+              this.engine_data[i].engineSAllStateWork = toMax(toMin(this.engine_data[i].engineSAllStateWork) + Math.floor((san1 - wu1) / 5))
             } else {
-              this.engine_data[i].engineSAllStateWork = toMax(toMin(this.engine_data[i].engineSAllStateWork) + toMin(this.engine_data_below[j].engineSAllStateWork))
-              this.engine_data[i].engineSpAllStateWork = toMax(toMin(this.engine_data[i].engineSpAllStateWork) + toMin(this.engine_data_below[j].engineSpAllStateWork))
+              this.engine_data[i].engineSAllStateWork = toMax(toMin(this.engine_data[i].engineSAllStateWork) + Math.ceil((san1 - wu1) / 5))
             }
 
-            this.engine_data[i].engineSMainCycle += this.engine_data_below[j].engineSMainCycle
-            this.engine_data[i].engineSpMainCycle += this.engine_data_below[j].engineSpMainCycle
+            if (yuShu2 === 0) {
+              this.engine_data[i].engineSpAllStateWork = toMax(toMin(this.engine_data[i].engineSpAllStateWork) + (san1 - wu1) / 5)
+            } else if (yuShu2 < 3) {
+              this.engine_data[i].engineSpAllStateWork = toMax(toMin(this.engine_data[i].engineSpAllStateWork) + Math.floor((san1 - wu1) / 5))
+            } else {
+              this.engine_data[i].engineSpAllStateWork = toMax(toMin(this.engine_data[i].engineSpAllStateWork) + Math.ceil((san1 - wu1) / 5))
+            }
+          } else {
+            this.engine_data[i].engineSAllStateWork = toMax(toMin(this.engine_data[i].engineSAllStateWork) + toMin(this.engine_data_below[j].engineSAllStateWork))
+            this.engine_data[i].engineSpAllStateWork = toMax(toMin(this.engine_data[i].engineSpAllStateWork) + toMin(this.engine_data_below[j].engineSpAllStateWork))
           }
+
+          this.engine_data[i].engineSMainCycle += this.engine_data_below[j].engineSMainCycle
+          this.engine_data[i].engineSpMainCycle += this.engine_data_below[j].engineSpMainCycle
+        } else {
+          l_data += 1
+          items[date_below] = l_data - 1
+          this.engine_data.push(this.engine_data_below)
         }
       }
 

@@ -1,7 +1,7 @@
 // 服务器响应前后拦截
-import axios from "axios"
-import qs from "qs"
-import config from "@/config"
+import axios from 'axios'
+import qs from 'qs'
+import config from '@/config'
 
 // 创建 axios 实例
 const {baseUrl, timeout} = config
@@ -9,7 +9,7 @@ const {baseUrl, timeout} = config
 const ax = axios.create({
   // 是否跨站点访问控制请求使用凭证(Cookie)
   withCredentials: true,
-  baseURL: baseUrl.pro, // 配置接口地址
+  baseURL: baseUrl.dev, // 配置接口地址
   // headers:{
   //   contentType : "application/json;charset=UTF-8",
   // },
@@ -38,7 +38,7 @@ ax.interceptors.response.use(response => {
   // 请求成功
   // 1. 根据自己项目需求定制自己的拦截
   // 2. 然后返回数据
-  return response;
+  return response
 }, error => {
   // 请求失败
   if (error && error.response) {
@@ -51,10 +51,9 @@ ax.interceptors.response.use(response => {
         break
       default:
         // 如果以上都不是的处理
-        return Promise.reject(error);
+        return Promise.reject(error)
     }
   }
-
 })
 
 export default ax

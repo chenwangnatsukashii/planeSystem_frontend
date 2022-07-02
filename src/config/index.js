@@ -14,11 +14,11 @@ export default {
    */
   baseUrl: {
     dev: 'http://localhost:9998/',
-    pro: 'http://119.3.191.100:9998/'
+    pro: 'http://192.168.9.68:9998/'
   },
 
   timeout: 10000,
-  version: "1.0.0",
+  version: '1.0.0',
   /**
    * @description 默认打开的首页的路由name值，默认为home
    */
