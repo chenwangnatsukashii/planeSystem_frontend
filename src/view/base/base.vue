@@ -7,14 +7,10 @@
       <Button style="margin-left: 10px;" type="primary" shape="circle" @click="operation('delete')">删除</Button>
     </div>
     <div style="margin-bottom: 10px;">
-      派工号：<Input clearable v-model="searchData.workNumber" placeholder="请输入派工号"
-                 style="width: 150px;"/>
+      派工号：<Input clearable v-model="searchData.workNumber" placeholder="请输入派工号" style="width: 150px;"/>
       机型：
       <Select v-model="searchData.planeType" clearable placeholder="请选择机型" style="width: 150px;">
-        <Option value="J11">歼-11</Option>
-        <Option value="J11B">歼-11B</Option>
-        <Option value="JJ9">歼教-9</Option>
-        <Option value="J8">教-8</Option>
+        <Option v-for="item in planeList" :value="item.value" :key="item.value">{{ item.planeName }}</Option>
       </Select>
       部队：<Input clearable v-model="searchData.unitNumber" placeholder="请输入部队" style="width: 150px;"/>
       飞机号：<Input clearable v-model="searchData.planeNum" placeholder="请输入飞机号" style="width: 150px;"/>
@@ -52,10 +48,7 @@
         </FormItem>
         <FormItem label="机型" prop="planeType">
           <Select v-model="newData.planeType" placeholder="请选择机型">
-            <Option value="J11">歼-11</Option>
-            <Option value="J11B">歼-11B</Option>
-            <Option value="JJ9">歼教-9</Option>
-            <Option value="J8">教-8</Option>
+            <Option v-for="item in planeList" :value="item.value" :key="item.value">{{ item.planeName }}</Option>
           </Select>
         </FormItem>
         <FormItem label="部队" prop="unitNumber">
@@ -76,7 +69,7 @@
 </style>
 <script>
 
-import {addPlane, deleteAnyPlane, deleteResumeEight} from '@/http/plane_system/base'
+import {addPlane, deleteAnyPlane} from '@/http/plane_system/base'
 
 export default {
   data () {
@@ -87,18 +80,37 @@ export default {
       loading: true,
 
       searchData: {
-        'workNumber': '',
-        'planeType': '',
-        'unitNumber': '',
-        'planeNum': ''
+        workNumber: '',
+        planeType: '',
+        unitNumber: '',
+        planeNum: ''
       },
 
       newData: {
-        'workNumber': '',
-        'planeType': '',
-        'unitNumber': '',
-        'planeNum': ''
+        workNumber: '',
+        planeType: '',
+        unitNumber: '',
+        planeNum: ''
       },
+
+      planeList: [
+        {
+          value: 'J11',
+          planeName: '歼-11'
+        },
+        {
+          value: 'J11B',
+          planeName: '歼-11B'
+        },
+        {
+          value: 'JJ9',
+          planeName: '歼教-9'
+        },
+        {
+          value: 'J8',
+          planeName: '教-8'
+        }
+      ],
 
       newDataRule: {
         workNumber: [
@@ -178,10 +190,10 @@ export default {
   },
 
   methods: {
-    baseAdd () {
-      this.$router.push('/base/base-add')
-    },
     searchPlane () {
+      this.searchData.workNumber = this.searchData.workNumber.trim()
+      this.searchData.unitNumber = this.searchData.unitNumber.trim()
+      this.searchData.planeNum = this.searchData.planeNum.trim()
       this.$getWithParams('/plane/getAllPlanes', this.searchData).then(res => {
         if (res) {
           this.base_data = res.data
